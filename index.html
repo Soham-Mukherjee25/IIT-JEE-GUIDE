@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IIT JEE — Your Complete Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Space+Grotesk:wght@300;400;600&family=Bebas+Neue&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+  /* ===== THEME SYSTEM ===== */
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --surface: #1e1e2e;
+    --surface2: #252535;
+    --border: #2e2e45;
+    --accent: #e8b86d;
+    --accent2: #c084fc;
+    --accent3: #38bdf8;
+    --text: #f0eff8;
+    --text2: #9998b8;
+    --text3: #6665a0;
+    --danger: #f87171;
+    --success: #4ade80;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --radius: 14px;
+    --shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+  .theme-cosmos { --bg:#04040a;--bg2:#080812;--bg3:#0e0e1e;--surface:#12122a;--surface2:#1a1a35;--border:#242450;--accent:#a78bfa;--accent2:#f472b6;--accent3:#34d399;--text:#eeeeff;--text2:#8888cc;--text3:#5555aa; }
+  .theme-solar  { --bg:#fffbf0;--bg2:#fef9e7;--bg3:#fdf3c8;--surface:#fff8e1;--surface2:#fff3c4;--border:#f0d875;--accent:#d97706;--accent2:#dc2626;--accent3:#059669;--text:#1c1a00;--text2:#78600a;--text3:#b8960a; }
+  .theme-arctic { --bg:#f0f4f8;--bg2:#e8f0f7;--bg3:#dce8f5;--surface:#ffffff;--surface2:#f5f9ff;--border:#c8d9ee;--accent:#1d4ed8;--accent2:#7c3aed;--accent3:#0891b2;--text:#0f1c2e;--text2:#3b5880;--text3:#7090b8; }
+  .theme-obsidian{ --bg:#0d0d0d;--bg2:#111111;--bg3:#161616;--surface:#1c1c1c;--surface2:#222222;--border:#2e2e2e;--accent:#e5e5e5;--accent2:#888888;--accent3:#555555;--text:#f5f5f5;--text2:#aaaaaa;--text3:#666666; }
+  .theme-ember  { --bg:#0f0800;--bg2:#150d00;--bg3:#1e1100;--surface:#261500;--surface2:#301a00;--border:#4a2c00;--accent:#ff9500;--accent2:#ff5500;--accent3:#ffcc00;--text:#fff5e0;--text2:#cc9933;--text3:#996622; }
+
+  .font-playfair { --font-display:'Playfair Display',serif; --font-body:'Lora',serif; }
+  .font-syne     { --font-display:'Syne',sans-serif; --font-body:'DM Sans',sans-serif; }
+  .font-bebas    { --font-display:'Bebas Neue',sans-serif; --font-body:'Space Grotesk',sans-serif; }
+  .font-cormorant{ --font-display:'Cormorant Garamond',serif; --font-body:'DM Sans',sans-serif; }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    min-height:100vh;
+    overflow-x:hidden;
+    transition:background .4s,color .4s;
+  }
+
+  /* ===== ANIMATED BG ===== */
+  .bg-grid{
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:48px 48px;
+    opacity:.15;
+    animation:gridpulse 8s ease-in-out infinite;
+  }
+  @keyframes gridpulse{0%,100%{opacity:.1}50%{opacity:.22}}
+
+  .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;animation:orbdrift 20s ease-in-out infinite;}
+  .orb1{width:600px;height:600px;top:-200px;right:-100px;background:radial-gradient(circle,rgba(168,139,250,.18),transparent 70%);animation-delay:0s;}
+  .orb2{width:400px;height:400px;bottom:-100px;left:-100px;background:radial-gradient(circle,rgba(232,184,109,.14),transparent 70%);animation-delay:-7s;}
+  .orb3{width:350px;height:350px;top:40%;left:30%;background:radial-gradient(circle,rgba(56,189,248,.1),transparent 70%);animation-delay:-14s;}
+  @keyframes orbdrift{0%,100%{transform:translate(0,0)}33%{transform:translate(40px,-30px)}66%{transform:translate(-30px,40px)}}
+
+  /* ===== LAYOUT ===== */
+  #app{position:relative;z-index:1}
+
+  /* ===== HEADER ===== */
+  header{
+    padding:1.5rem 2rem;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border);
+    background:rgba(10,10,15,.7);
+    backdrop-filter:blur(20px);
+    position:sticky;top:0;z-index:100;
+  }
+  .logo{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--accent);letter-spacing:-.02em}
+  .logo span{color:var(--text2);font-weight:300;font-size:1rem}
+  .header-actions{display:flex;gap:.75rem;align-items:center}
+  .settings-btn{
+    background:var(--surface);border:1px solid var(--border);color:var(--text2);
+    padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-family:var(--font-body);
+    font-size:.85rem;display:flex;align-items:center;gap:.5rem;transition:all .2s;
+  }
+  .settings-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ===== NAV TABS ===== */
+  .nav-tabs{
+    display:flex;gap:0;overflow-x:auto;
+    border-bottom:1px solid var(--border);
+    background:var(--bg2);
+    padding:0 2rem;
+    scrollbar-width:none;
+  }
+  .nav-tabs::-webkit-scrollbar{display:none}
+  .nav-tab{
+    padding:.9rem 1.4rem;font-size:.85rem;font-weight:500;
+    color:var(--text3);cursor:pointer;border:none;background:none;
+    font-family:var(--font-body);white-space:nowrap;
+    border-bottom:2px solid transparent;transition:all .2s;
+    position:relative;
+  }
+  .nav-tab:hover{color:var(--text2)}
+  .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+  /* ===== MAIN CONTENT ===== */
+  .content{padding:2.5rem 2rem;max-width:1200px;margin:0 auto}
+
+  /* ===== SECTION TITLE ===== */
+  .section-title{
+    font-family:var(--font-display);font-size:2.2rem;font-weight:700;
+    margin-bottom:.5rem;line-height:1.1;
+  }
+  .section-subtitle{color:var(--text2);font-size:.95rem;margin-bottom:2rem;line-height:1.6}
+
+  /* ===== QUIZ ===== */
+  .quiz-container{max-width:700px;margin:0 auto}
+  .quiz-progress{
+    display:flex;align-items:center;gap:1rem;margin-bottom:2rem;
+  }
+  .progress-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .5s ease}
+  .progress-text{font-size:.8rem;color:var(--text3);font-family:var(--font-mono);white-space:nowrap}
+
+  .question-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:2rem;
+    animation:slideup .4s ease;
+  }
+  @keyframes slideup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  .q-category{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-family:var(--font-mono);margin-bottom:.75rem}
+  .q-text{font-family:var(--font-display);font-size:1.35rem;line-height:1.5;margin-bottom:1.5rem}
+
+  .options-grid{display:grid;gap:.75rem}
+  .option-btn{
+    background:var(--bg3);border:1.5px solid var(--border);
+    color:var(--text);padding:1rem 1.25rem;border-radius:10px;
+    cursor:pointer;font-family:var(--font-body);font-size:.9rem;
+    text-align:left;transition:all .2s;display:flex;align-items:center;gap:.75rem;
+  }
+  .option-btn:hover{border-color:var(--accent);background:var(--surface2);color:var(--accent)}
+  .option-btn.selected{border-color:var(--accent);background:rgba(232,184,109,.1);color:var(--accent)}
+  .opt-letter{
+    width:28px;height:28px;border-radius:6px;background:var(--border);
+    display:flex;align-items:center;justify-content:center;
+    font-size:.75rem;font-family:var(--font-mono);flex-shrink:0;
+    transition:all .2s;
+  }
+  .option-btn.selected .opt-letter{background:var(--accent);color:var(--bg)}
+  .option-btn:hover .opt-letter{background:var(--accent);color:var(--bg)}
+
+  .quiz-actions{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;gap:1rem}
+  .btn-primary{
+    background:var(--accent);color:var(--bg);
+    border:none;padding:.8rem 2rem;border-radius:8px;
+    font-family:var(--font-body);font-weight:600;font-size:.9rem;
+    cursor:pointer;transition:all .2s;
+  }
+  .btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+  .btn-secondary{
+    background:var(--surface);border:1px solid var(--border);color:var(--text2);
+    padding:.8rem 1.5rem;border-radius:8px;
+    font-family:var(--font-body);font-size:.9rem;cursor:pointer;transition:all .2s;
+  }
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ===== RESULT ===== */
+  .result-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:2.5rem;
+    animation:slideup .5s ease;
+  }
+  .result-badge{
+    display:inline-flex;align-items:center;gap:.5rem;
+    background:rgba(232,184,109,.15);border:1px solid var(--accent);
+    color:var(--accent);padding:.4rem 1rem;border-radius:20px;
+    font-size:.8rem;font-family:var(--font-mono);margin-bottom:1.2rem;
+  }
+  .result-branch{
+    font-family:var(--font-display);font-size:2rem;font-weight:700;
+    margin-bottom:.5rem;line-height:1.1;
+  }
+  .result-desc{color:var(--text2);line-height:1.7;margin-bottom:1.5rem;font-size:.95rem}
+
+  .result-iits{margin-bottom:1.5rem}
+  .result-iits h4{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);font-family:var(--font-mono);margin-bottom:.75rem}
+  .iit-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+  .iit-tag{
+    background:var(--bg3);border:1px solid var(--border);
+    padding:.35rem .8rem;border-radius:6px;font-size:.82rem;color:var(--text2);
+  }
+  .iit-tag.top{border-color:var(--accent);color:var(--accent);background:rgba(232,184,109,.08)}
+
+  .scores-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin-bottom:1.5rem}
+  .score-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.9rem;text-align:center}
+  .score-val{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--accent)}
+  .score-label{font-size:.75rem;color:var(--text3);margin-top:.2rem}
+
+  .trait-bars{display:grid;gap:.6rem;margin-bottom:1.5rem}
+  .trait-row{display:flex;align-items:center;gap:.75rem}
+  .trait-name{font-size:.82rem;color:var(--text2);width:120px;flex-shrink:0}
+  .trait-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+  .trait-fill{height:100%;border-radius:3px;transition:width 1s ease .3s}
+
+  /* ===== GUIDE CARDS ===== */
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+  .guide-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:1.5rem;
+    transition:all .25s;cursor:pointer;
+    position:relative;overflow:hidden;
+  }
+  .guide-card::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(232,184,109,.05),transparent);
+    opacity:0;transition:opacity .25s;
+  }
+  .guide-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:var(--shadow)}
+  .guide-card:hover::before{opacity:1}
+  .card-icon{font-size:1.8rem;margin-bottom:.75rem}
+  .card-title{font-family:var(--font-display);font-size:1.05rem;font-weight:700;margin-bottom:.4rem}
+  .card-desc{font-size:.83rem;color:var(--text2);line-height:1.6}
+  .card-tag{
+    display:inline-block;margin-top:.75rem;
+    font-size:.72rem;font-family:var(--font-mono);
+    color:var(--accent3);letter-spacing:.05em;
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline{position:relative;padding-left:2rem}
+  .timeline::before{content:'';position:absolute;left:.55rem;top:0;bottom:0;width:1px;background:var(--border)}
+  .tl-item{position:relative;margin-bottom:1.5rem}
+  .tl-dot{
+    position:absolute;left:-2rem;top:.2rem;
+    width:10px;height:10px;border-radius:50%;
+    background:var(--accent);border:2px solid var(--bg);
+    box-shadow:0 0 0 3px var(--accent);
+  }
+  .tl-dot.dim{background:var(--border);box-shadow:0 0 0 3px var(--border)}
+  .tl-phase{font-size:.72rem;font-family:var(--font-mono);color:var(--accent);letter-spacing:.06em;margin-bottom:.2rem}
+  .tl-title{font-weight:600;margin-bottom:.3rem}
+  .tl-text{font-size:.84rem;color:var(--text2);line-height:1.6}
+
+  /* ===== BRANCH TABLE ===== */
+  .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse}
+  th{background:var(--surface2);padding:.9rem 1.1rem;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-mono);color:var(--text3);text-align:left;border-bottom:1px solid var(--border)}
+  td{padding:.85rem 1.1rem;font-size:.87rem;border-bottom:1px solid var(--border);color:var(--text2)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--surface);color:var(--text)}
+  .rank-badge{
+    display:inline-block;padding:.2rem .6rem;border-radius:5px;
+    font-size:.75rem;font-family:var(--font-mono);font-weight:600;
+  }
+  .rank-top{background:rgba(232,184,109,.15);color:var(--accent)}
+  .rank-mid{background:rgba(56,189,248,.12);color:var(--accent3)}
+  .rank-ok{background:rgba(74,222,128,.1);color:var(--success)}
+
+  /* ===== SUBJECT PLAN ===== */
+  .subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+  .subject-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:1.25rem;
+  }
+  .subject-header{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem}
+  .subject-icon{font-size:1.3rem}
+  .subject-name{font-weight:600;font-size:.95rem}
+  .chapter-list{list-style:none;display:grid;gap:.4rem}
+  .chapter-list li{
+    font-size:.82rem;color:var(--text2);
+    display:flex;align-items:center;gap:.5rem;
+  }
+  .chapter-list li::before{content:'→';color:var(--accent);font-size:.75rem}
+  .chapter-list li.done{color:var(--text3);text-decoration:line-through}
+
+  /* ===== SETTINGS PANEL ===== */
+  .settings-overlay{
+    position:fixed;inset:0;z-index:200;
+    background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+    display:flex;align-items:flex-start;justify-content:flex-end;
+    opacity:0;pointer-events:none;transition:opacity .3s;
+  }
+  .settings-overlay.open{opacity:1;pointer-events:all}
+  .settings-panel{
+    background:var(--bg2);border-left:1px solid var(--border);
+    width:340px;height:100vh;overflow-y:auto;
+    padding:2rem;
+    transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  .settings-overlay.open .settings-panel{transform:translateX(0)}
+  .settings-title{font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center}
+  .close-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.2rem;padding:.25rem}
+  .close-btn:hover{color:var(--text)}
+  .settings-section{margin-bottom:1.75rem}
+  .settings-label{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-family:var(--font-mono);margin-bottom:.75rem}
+  .theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+  .theme-swatch{
+    border-radius:8px;height:50px;cursor:pointer;
+    border:2px solid transparent;transition:all .2s;
+    position:relative;overflow:hidden;
+  }
+  .theme-swatch.active{border-color:var(--accent)}
+  .theme-swatch span{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:.65rem;color:#fff;font-family:var(--font-mono);text-shadow:0 1px 3px rgba(0,0,0,.8)}
+
+  .font-options{display:grid;gap:.5rem}
+  .font-option{
+    background:var(--surface);border:1.5px solid var(--border);
+    border-radius:8px;padding:.7rem 1rem;cursor:pointer;
+    transition:all .2s;
+  }
+  .font-option:hover,.font-option.active{border-color:var(--accent);color:var(--accent)}
+  .font-option-name{font-size:.95rem;margin-bottom:.1rem}
+  .font-option-sample{font-size:.75rem;color:var(--text3)}
+
+  /* ===== MODAL ===== */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:150;
+    background:rgba(0,0,0,.7);backdrop-filter:blur(10px);
+    display:flex;align-items:center;justify-content:center;
+    padding:1.5rem;
+    opacity:0;pointer-events:none;transition:opacity .3s;
+  }
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--radius);max-width:600px;width:100%;
+    max-height:85vh;overflow-y:auto;padding:2rem;
+    transform:scale(.95);transition:transform .3s;
+  }
+  .modal-overlay.open .modal{transform:scale(1)}
+  .modal-title{font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:1rem}
+  .modal-body{font-size:.9rem;color:var(--text2);line-height:1.8}
+  .modal-body h4{color:var(--text);font-size:1rem;margin:1rem 0 .4rem}
+  .modal-body ul{padding-left:1.2rem;display:grid;gap:.3rem}
+  .modal-close{
+    margin-top:1.5rem;background:var(--surface);border:1px solid var(--border);
+    color:var(--text2);padding:.7rem 1.5rem;border-radius:8px;
+    cursor:pointer;font-family:var(--font-body);transition:all .2s;
+  }
+  .modal-close:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ===== MISC ===== */
+  .tag{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .65rem;border-radius:5px;font-size:.75rem;font-family:var(--font-mono)}
+  .tag-amber{background:rgba(232,184,109,.12);color:var(--accent);border:1px solid rgba(232,184,109,.25)}
+  .tag-blue{background:rgba(56,189,248,.1);color:var(--accent3);border:1px solid rgba(56,189,248,.2)}
+  .tag-green{background:rgba(74,222,128,.1);color:var(--success);border:1px solid rgba(74,222,128,.2)}
+
+  .divider{height:1px;background:var(--border);margin:2rem 0}
+  .info-box{background:var(--surface);border-left:3px solid var(--accent);padding:1rem 1.25rem;border-radius:0 8px 8px 0;font-size:.88rem;color:var(--text2);line-height:1.7;margin:1rem 0}
+  .hidden{display:none!important}
+  
+  @media(max-width:600px){
+    header{padding:1rem}
+    .logo{font-size:1.1rem}
+    .content{padding:1.5rem 1rem}
+    .section-title{font-size:1.6rem}
+    .settings-panel{width:100vw}
+  }
+</style>
+</head>
+<body class="theme-default font-playfair">
+
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div id="app">
+
+<!-- HEADER -->
+<header>
+  <div class="logo">IIT<span> JEE</span> · Command Centre</div>
+  <div class="header-actions">
+    <button class="settings-btn" onclick="openSettings()">⚙ Appearance</button>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showTab('quiz')">🎯 Branch Finder</button>
+  <button class="nav-tab" onclick="showTab('branches')">🏛 All Branches</button>
+  <button class="nav-tab" onclick="showTab('roadmap')">🗺 JEE Roadmap</button>
+  <button class="nav-tab" onclick="showTab('syllabus')">📚 Syllabus</button>
+  <button class="nav-tab" onclick="showTab('strategy')">⚡ Strategy</button>
+  <button class="nav-tab" onclick="showTab('colleges')">🏆 IIT Rankings</button>
+  <button class="nav-tab" onclick="showTab('resources')">📦 Resources</button>
+</div>
+
+<!-- =================== TAB: QUIZ =================== -->
+<div id="tab-quiz" class="content">
+  <div class="quiz-container" id="quizContainer">
+    <div class="section-title">Which IIT Branch Suits You?</div>
+    <div class="section-subtitle">Answer 10 questions honestly. We'll map your personality, interests, and strengths to the perfect engineering branch — and tell you which IIT to aim for.</div>
+    
+    <div class="quiz-progress">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-text" id="progressText">0 / 10</div>
+    </div>
+    <div id="questionArea"></div>
+    <div id="resultArea" class="hidden"></div>
+  </div>
+</div>
+
+<!-- =================== TAB: BRANCHES =================== -->
+<div id="tab-branches" class="content hidden">
+  <div class="section-title">All IIT Engineering Branches</div>
+  <div class="section-subtitle">Explore every branch — what it is, what you'll do, and what it leads to.</div>
+  <div class="cards-grid" id="branchCards"></div>
+</div>
+
+<!-- =================== TAB: ROADMAP =================== -->
+<div id="tab-roadmap" class="content hidden">
+  <div class="section-title">Your JEE Roadmap</div>
+  <div class="section-subtitle">From Class 10 to IIT gate — every phase mapped out with precision. You're at the starting line right now.</div>
+  <div class="timeline" id="roadmapTimeline"></div>
+</div>
+
+<!-- =================== TAB: SYLLABUS =================== -->
+<div id="tab-syllabus" class="content hidden">
+  <div class="section-title">JEE Advanced Syllabus</div>
+  <div class="section-subtitle">Every chapter you need to master. Physics · Chemistry · Mathematics.</div>
+  <div class="subject-grid" id="syllabusGrid"></div>
+</div>
+
+<!-- =================== TAB: STRATEGY =================== -->
+<div id="tab-strategy" class="content hidden">
+  <div class="section-title">Winning Strategy</div>
+  <div class="section-subtitle">How toppers approach JEE — study methods, time tables, mental models, and everything in between.</div>
+  <div class="cards-grid" id="strategyCards"></div>
+</div>
+
+<!-- =================== TAB: COLLEGES =================== -->
+<div id="tab-colleges" class="content hidden">
+  <div class="section-title">IIT Rankings & Cutoffs</div>
+  <div class="section-subtitle">Where each IIT stands, and what rank you need to get there.</div>
+  <div class="table-wrap">
+    <table id="iitTable"></table>
+  </div>
+</div>
+
+<!-- =================== TAB: RESOURCES =================== -->
+<div id="tab-resources" class="content hidden">
+  <div class="section-title">The Complete Resource Kit</div>
+  <div class="section-subtitle">Books, apps, YouTube channels, test series, and tools — everything a JEE aspirant needs.</div>
+  <div class="cards-grid" id="resourceCards"></div>
+</div>
+
+</div><!-- /#app -->
+
+<!-- =================== SETTINGS PANEL =================== -->
+<div class="settings-overlay" id="settingsOverlay" onclick="handleOverlayClick(event)">
+  <div class="settings-panel">
+    <div class="settings-title">Appearance <button class="close-btn" onclick="closeSettings()">✕</button></div>
+
+    <div class="settings-section">
+      <div class="settings-label">Theme</div>
+      <div class="theme-grid">
+        <div class="theme-swatch active" style="background:linear-gradient(135deg,#0a0a0f,#1a1a24)" onclick="setTheme('default',this)"><span>Midnight</span></div>
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#04040a,#12122a)" onclick="setTheme('cosmos',this)"><span>Cosmos</span></div>
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#fffbf0,#fdf3c8)" onclick="setTheme('solar',this)"><span>Solar</span></div>
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#f0f4f8,#ffffff)" onclick="setTheme('arctic',this)"><span>Arctic</span></div>
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#0d0d0d,#1c1c1c)" onclick="setTheme('obsidian',this)"><span>Obsidian</span></div>
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#0f0800,#261500)" onclick="setTheme('ember',this)"><span>Ember</span></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Font Style</div>
+      <div class="font-options">
+        <div class="font-option active" onclick="setFont('playfair',this)">
+          <div class="font-option-name" style="font-family:'Playfair Display',serif">Playfair Display</div>
+          <div class="font-option-sample">Classic · Elegant · Serif</div>
+        </div>
+        <div class="font-option" onclick="setFont('syne',this)">
+          <div class="font-option-name" style="font-family:'Syne',sans-serif;font-weight:700">Syne</div>
+          <div class="font-option-sample">Modern · Bold · Geometric</div>
+        </div>
+        <div class="font-option" onclick="setFont('bebas',this)">
+          <div class="font-option-name" style="font-family:'Bebas Neue',sans-serif;letter-spacing:.05em">Bebas Neue</div>
+          <div class="font-option-sample">Display · Powerful · Impact</div>
+        </div>
+        <div class="font-option" onclick="setFont('cormorant',this)">
+          <div class="font-option-name" style="font-family:'Cormorant Garamond',serif;font-style:italic">Cormorant Garamond</div>
+          <div class="font-option-sample">Literary · Refined · Italic flair</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">UI Density</div>
+      <div style="display:grid;gap:.5rem">
+        <div class="font-option" id="density-compact" onclick="setDensity('compact')">
+          <div style="font-size:.9rem;font-weight:500">Compact</div>
+          <div class="font-option-sample">Tight spacing · More info visible</div>
+        </div>
+        <div class="font-option active" id="density-normal" onclick="setDensity('normal')">
+          <div style="font-size:.9rem;font-weight:500">Normal</div>
+          <div class="font-option-sample">Balanced · Recommended</div>
+        </div>
+        <div class="font-option" id="density-relaxed" onclick="setDensity('relaxed')">
+          <div style="font-size:.9rem;font-weight:500">Relaxed</div>
+          <div class="font-option-sample">Spacious · Easy on the eyes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleModalClick(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <button class="modal-close" onclick="closeModal()">✕ Close</button>
+  </div>
+</div>
+
+<script>
+// ===========================
+// DATA
+// ===========================
+const QUESTIONS = [
+  {cat:"CURIOSITY",q:"When you encounter a complex problem, your first instinct is to:",opts:["Break it into mathematical equations","Run experiments to test ideas","Build or design something physical","Write code or create an algorithm","Analyse systems and how parts interact","Understand the human/social impact"]},
+  {cat:"INTEREST",q:"Which of these topics genuinely excites you the most?",opts:["Black holes, quantum mechanics, energy","Molecules, materials, new substances","Circuits, chips, and computing hardware","Robots, automation, and manufacturing","Buildings, bridges, and infrastructure","AI, data, machine learning"]},
+  {cat:"STRENGTH",q:"In school, which subject do you find most natural?",opts:["Pure Mathematics","Physics","Chemistry","Computer Science","Biology/Environmental Science","Drawing/Design/Spatial thinking"]},
+  {cat:"WORK STYLE",q:"Imagine your ideal work environment in 10 years:",opts:["Clean equations on a whiteboard — theoretical research","Lab with chemicals and new materials","Hardware lab with circuits and chips","Writing code and training AI models","Factory floor or construction site","Hybrid — office meets field"]},
+  {cat:"GOAL",q:"What is your biggest long-term ambition?",opts:["Nobel Prize or Turing Award","Start a deep-tech startup","Work at ISRO / NASA / DRDO","Build the next Google or AI company","Design smart infrastructure","Solve India's energy crisis"]},
+  {cat:"PERSONALITY",q:"Friends would describe you as:",opts:["The logical, analytical one","The hands-on, tinkerer","The creative, out-of-the-box thinker","The tech-savvy, coder","The systematic, organised one","The empathetic, big-picture thinker"]},
+  {cat:"SUBJECT PREFERENCE",q:"If JEE only tested one subject, you'd prefer it to be:",opts:["Mathematics","Physics","Chemistry","Computer Science / Logic","All three equally","None — I prefer practical exams"]},
+  {cat:"PROJECT",q:"You're given a free month and unlimited resources. You'd build:",opts:["A proof of a famous unsolved theorem","A new high-efficiency solar cell","A custom CPU from scratch","An advanced AI/ML model","A smart automated machine","A sustainable city design"]},
+  {cat:"CAREER",q:"Which future career appeals most?",opts:["Professor / Researcher","Materials Scientist / R&D Engineer","Electronics Engineer at Apple/NVIDIA","Software Engineer at a FAANG","Mechanical / Aerospace Engineer","Civil / Urban Infrastructure Engineer"]},
+  {cat:"VISION",q:"India in 2050 — what do you most want to have contributed to?",opts:["Fundamental scientific discoveries","Cutting-edge new materials","India's semiconductor revolution","AI and software leadership","Space and defence tech","Smart cities and green energy"]},
+];
+
+const BRANCH_SCORES = {
+  "Computer Science & Engineering (CSE)":[0,0,0,2,0,1, 0,0,0,2,0,0, 0,0,1,2,0,0, 0,0,0,2,0,0, 0,1,0,2,0,0, 0,0,0,2,0,0, 0,0,0,2,0,0, 0,0,0,2,0,0, 0,0,0,2,1,0, 0,0,0,2,0,0],
+  "Electrical Engineering (EE)":[0,1,0,1,1,0, 0,0,0,0,1,1, 0,1,0,1,0,0, 0,0,0,1,0,0, 0,0,1,1,0,0, 0,1,0,1,1,0, 0,1,0,1,0,0, 0,0,1,1,0,0, 0,0,1,1,0,0, 0,0,1,1,0,0],
+  "Mechanical Engineering (ME)":[1,1,0,0,1,0, 0,1,0,0,0,0, 0,1,0,0,0,1, 0,0,0,0,1,0, 0,0,1,0,1,0, 0,0,1,0,1,0, 0,1,0,0,0,0, 0,0,0,0,1,0, 0,0,0,0,1,0, 0,0,0,0,1,0],
+  "Electronics & Communication (ECE)":[0,1,0,1,1,0, 0,0,0,1,0,0, 0,1,0,1,0,0, 0,0,1,1,0,0, 0,1,0,1,0,0, 0,0,0,1,1,0, 0,1,0,1,0,0, 0,0,1,1,0,0, 0,0,1,1,0,0, 0,0,1,1,0,0],
+  "Chemical Engineering (ChE)":[1,0,1,0,1,0, 0,0,1,0,0,0, 0,0,1,0,0,0, 0,1,0,0,0,0, 0,0,0,0,0,1, 0,0,1,0,0,0, 0,0,1,0,0,0, 0,1,0,0,0,0, 0,1,0,0,0,0, 0,0,0,0,0,1],
+  "Civil Engineering (CE)":[0,1,0,0,1,1, 0,0,0,0,0,0, 0,0,0,0,0,1, 0,0,0,0,0,1, 0,0,0,0,0,1, 0,0,0,0,0,1, 0,0,0,0,0,1, 0,0,0,0,0,1, 0,0,0,0,0,1, 0,0,0,0,0,1],
+  "Engineering Physics / Mathematics":[2,1,0,0,0,0, 2,0,0,0,0,0, 2,0,0,0,0,0, 2,0,0,0,0,0, 2,0,0,0,0,0, 2,0,0,0,0,0, 2,0,0,0,0,0, 2,0,0,0,0,0, 2,0,0,0,0,0, 2,0,0,0,0,0],
+  "Materials Science & Engineering":[0,0,2,0,1,0, 0,0,1,0,0,0, 0,0,2,0,0,0, 0,1,0,0,0,0, 0,0,0,0,0,1, 0,0,0,0,0,0, 0,0,1,0,0,0, 0,1,0,0,0,0, 0,1,0,0,0,0, 0,1,0,0,0,0],
+};
+
+const BRANCH_INFO = {
+  "Computer Science & Engineering (CSE)":{icon:"💻",short:"Build the digital world — algorithms, AI, systems, software.",iits:["IIT Bombay","IIT Delhi","IIT Madras","IIT Kanpur","IIT Kharagpur"],rank:"Top 500 (Gen)",desc:"The most coveted branch in India. You'll master algorithms, operating systems, databases, machine learning, and distributed systems. Leads to FAANG, startups, or cutting-edge research.",careers:["Software Engineer","AI/ML Engineer","Research Scientist","Startup Founder","Data Scientist"],skills:["Algorithms & DS","Machine Learning","Systems Programming","Database Design"]},
+  "Electrical Engineering (EE)":{icon:"⚡",short:"Power, signals, chips — the backbone of every device.",iits:["IIT Bombay","IIT Delhi","IIT Madras","IIT Kanpur"],rank:"Top 1500 (Gen)",desc:"One of the most mathematically rich branches. Covers power systems, analog & digital circuits, signal processing, control systems, and VLSI. Extremely versatile — leads to hardware, semiconductor, and power sector careers.",careers:["VLSI Design Engineer","Power Systems Engineer","Control Systems Engineer","Semiconductor R&D"],skills:["Circuit Theory","Signal Processing","Control Systems","Electromagnetic Fields"]},
+  "Mechanical Engineering (ME)":{icon:"⚙️",short:"Design machines, engines, robots — the oldest engineering.",iits:["IIT Kanpur","IIT Kharagpur","IIT Madras","IIT Bombay"],rank:"Top 3000 (Gen)",desc:"From turbines to spacecraft, ME covers thermodynamics, fluid mechanics, manufacturing, and robotics. Excellent for ISRO, automotive, and aerospace industries.",careers:["Aerospace Engineer","Design Engineer","Robotics Engineer","ISRO Scientist"],skills:["Thermodynamics","Fluid Mechanics","Manufacturing","Robotics & Automation"]},
+  "Electronics & Communication (ECE)":{icon:"📡",short:"Chips, wireless, embedded systems — tech that connects.",iits:["IIT Delhi","IIT Madras","IIT Kharagpur","IIT Roorkee"],rank:"Top 2000 (Gen)",desc:"The bridge between hardware and software. ECE covers VLSI, RF systems, communication networks, and embedded systems. Top recruiter is the semiconductor and telecom industry.",careers:["Embedded Systems Engineer","RF Engineer","VLSI Design","Telecom Engineer"],skills:["Digital Electronics","Communications","Embedded C","VLSI & FPGA"]},
+  "Chemical Engineering (ChE)":{icon:"🧪",short:"Transform matter — petrochemicals, pharma, new materials.",iits:["IIT Bombay","IIT Madras","IIT Kharagpur"],rank:"Top 4000 (Gen)",desc:"Highly specialised, but extremely valuable. Covers thermodynamics, reaction engineering, process design, and polymer science. Strong in petrochemical, pharma, and materials industries.",careers:["Process Engineer","R&D Scientist","Environmental Engineer","Petroleum Engineer"],skills:["Transport Phenomena","Reaction Kinetics","Process Simulation","Material Synthesis"]},
+  "Civil Engineering (CE)":{icon:"🏗️",short:"Build India's infrastructure — bridges, smart cities, water.",iits:["IIT Delhi","IIT Roorkee","IIT Madras"],rank:"Top 6000 (Gen)",desc:"Often underestimated but immensely impactful. India's massive infrastructure boom makes Civil Engineering extremely relevant. Covers structural, environmental, and geo-technical engineering.",careers:["Structural Engineer","Urban Planner","Environmental Engineer","Government Officer (IES)"],skills:["Structural Analysis","Geo-technical Eng.","Fluid Mechanics","Construction Tech."]},
+  "Engineering Physics / Mathematics":{icon:"🔭",short:"Fundamental science — for those who want to understand the universe.",iits:["IIT Bombay","IIT Delhi","IIT Kanpur"],rank:"Top 5000 (Gen)",desc:"Perfect for those who love deep science. A gateway to research in quantum computing, photonics, astrophysics, or mathematical finance. Leads to top PhDs worldwide.",careers:["Research Scientist","Quant Analyst","Quantum Computing","Astrophysics PhD"],skills:["Quantum Mechanics","Mathematical Physics","Advanced Calculus","Linear Algebra"]},
+  "Materials Science & Engineering":{icon:"💎",short:"Design new materials — semiconductors, batteries, composites.",iits:["IIT Bombay","IIT Kanpur","IIT Madras"],rank:"Top 5500 (Gen)",desc:"The future of technology lies in new materials. From graphene to solid-state batteries, this branch is at the intersection of chemistry, physics, and engineering.",careers:["Materials Scientist","Battery R&D","Aerospace Materials","Nanotechnology"],skills:["Crystal Structure","Phase Diagrams","Polymer Science","Characterisation Techniques"]},
+};
+
+const IIT_DATA = [
+  {rank:1,name:"IIT Bombay",city:"Mumbai",nirf:"1",topBranch:"CSE, Electrical",jeeRank:"~50-500",note:"Most prestigious brand"},
+  {rank:2,name:"IIT Delhi",city:"New Delhi",nirf:"2",topBranch:"CSE, EE, ECE",jeeRank:"~100-700",note:"Best placement record"},
+  {rank:3,name:"IIT Madras",city:"Chennai",nirf:"3",topBranch:"CSE, Mechanical",jeeRank:"~150-800",note:"Research powerhouse"},
+  {rank:4,name:"IIT Kanpur",city:"Kanpur",nirf:"4",topBranch:"CSE, Physics, Maths",jeeRank:"~200-1000",note:"Science research leader"},
+  {rank:5,name:"IIT Kharagpur",city:"Kharagpur",nirf:"5",topBranch:"CS, Mechanical, ECE",jeeRank:"~300-1500",note:"Oldest IIT, vast campus"},
+  {rank:6,name:"IIT Roorkee",city:"Roorkee",nirf:"6",topBranch:"Civil, ECE, CS",jeeRank:"~500-2500",note:"Best civil engineering"},
+  {rank:7,name:"IIT Guwahati",city:"Guwahati",nirf:"7",topBranch:"CSE, EE",jeeRank:"~800-3500",note:"Strong research culture"},
+  {rank:8,name:"IIT Hyderabad",city:"Hyderabad",nirf:"9",topBranch:"CSE, AI",jeeRank:"~1200-5000",note:"AI & interdisciplinary"},
+  {rank:9,name:"IIT BHU",city:"Varanasi",nirf:"10",topBranch:"CS, Mechanical",jeeRank:"~1500-6000",note:"Heritage campus"},
+  {rank:10,name:"IIT Tirupati",city:"Tirupati",nirf:"15",topBranch:"CSE, EE",jeeRank:"~5000-12000",note:"New gen IIT, growing fast"},
+];
+
+const ROADMAP = [
+  {phase:"NOW · CLASS 11",title:"Foundation Year — The Most Critical",text:"This is where your JEE is won or lost. Build every concept from scratch. Don't rush. Study NCERT Physics, Chemistry, and Mathematics deeply. Join a coaching institute (Allen, Fiitjee, Resonance, or Vedantu). Focus on Class 11 chapters — 60% of JEE paper comes from here.",done:false},
+  {phase:"CLASS 11 MID",title:"Start Problem Solving Seriously",text:"Begin HC Verma (Physics), RD Sharma / SL Loney (Maths), NCERT + MS Chauhan (Chemistry). Solve 20–30 problems per chapter minimum. Maintain an error log. Time your solutions from the start.",done:false},
+  {phase:"CLASS 12 START",title:"Complete New Chapters + Revise Class 11",text:"Cover all Class 12 topics by November. Simultaneously revise all Class 11 topics. Don't neglect either. Attempt JEE Main mock tests from October onward.",done:false},
+  {phase:"NOV – JAN",title:"Full Syllabus Revision + Mock Test Marathon",text:"Minimum 2 full mocks per week. Analyse every mock deeply — don't just look at scores, understand patterns. Fix weak chapters. Aim to improve accuracy over raw attempts.",done:false},
+  {phase:"JAN – APR",title:"JEE Main Attempt + Advanced Prep",text:"JEE Main is in January and April. Attempt both sessions. After January results, pivot strategy. Begin JEE Advanced-specific problem solving (Irodov, Krotov, Advanced PYQs). The last 60 days before Advanced are the most intense.",done:false},
+  {phase:"MAY",title:"JEE Advanced — The Final Battle",text:"This is what everything is for. Stay calm, eat well, sleep 7+ hours in the days before. Manage time in the hall — JEE Advanced has unique question patterns. Don't panic if a section seems hard.",done:false},
+  {phase:"POST RESULT",title:"Counselling — JOSAA & CSAB",text:"Use JOSAA (Joint Seat Allocation Authority) for IIT seat allotment. Lock branches wisely — consider branch + IIT combination. NIT, IIIT, and BITS are excellent fallbacks. The journey doesn't end at the gate.",done:false},
+];
+
+const SYLLABUS = {
+  "Mathematics":{icon:"∑",chapters:["Complex Numbers","Quadratic Equations","Sequences & Series","Matrices & Determinants","Permutations & Combinations","Binomial Theorem","Limits, Continuity & Differentiability","Application of Derivatives","Integrals (Definite & Indefinite)","Differential Equations","Coordinate Geometry","3D Geometry & Vectors","Probability & Statistics","Trigonometry"]},
+  "Physics":{icon:"⚛",chapters:["Kinematics & Laws of Motion","Work, Energy & Power","Rotational Motion","Gravitation","Simple Harmonic Motion","Waves & Sound","Thermal Physics","Electrostatics","Current Electricity","Magnetism","EMI & AC Circuits","Optics (Ray & Wave)","Modern Physics","Semiconductors"]},
+  "Chemistry":{icon:"🧬",chapters:["Atomic Structure & Bonding","States of Matter","Thermodynamics","Equilibrium","Electrochemistry","Chemical Kinetics","Coordination Compounds","Organic Chemistry (Basics)","Reaction Mechanisms","Named Reactions","Polymers & Biomolecules","p-Block / d-Block Elements","Solutions","Surface Chemistry"]},
+};
+
+const STRATEGY_DATA = [
+  {icon:"🕰",title:"The 6-Hour Rule",desc:"Quality beats quantity. 6 focused hours of JEE prep outperforms 12 hours of distracted study. Use Pomodoro — 50 min on, 10 min off.",tag:"Time Management"},
+  {icon:"📝",title:"Error Log Method",desc:"Maintain a physical notebook of every mistake. Categorise: Conceptual error / Silly mistake / Time pressure. Review it every Sunday.",tag:"Study Technique"},
+  {icon:"🎯",title:"PYQ First Strategy",desc:"Solve the last 15 years of JEE Advanced PYQs chapter by chapter. Patterns repeat. You'll understand what the paper actually tests.",tag:"High Leverage"},
+  {icon:"🧠",title:"Spaced Repetition",desc:"Revisit a chapter 24 hrs, 1 week, and 1 month after first study. This encodes it in long-term memory. Use Anki or a manual system.",tag:"Memory Science"},
+  {icon:"⚡",title:"Mock Test Analysis",desc:"Spend equal time analysing a mock as taking it. Mark questions: Correct+Confident / Correct+Lucky / Wrong+Knew / Wrong+Blind. Fix the last two.",tag:"Test Strategy"},
+  {icon:"📊",title:"Weighted Chapter Study",desc:"Not all chapters are equal. 5–6 chapters per subject contribute 60–70% of marks. Master those first, then fill gaps.",tag:"Prioritisation"},
+  {icon:"😴",title:"Sleep is Non-Negotiable",desc:"Toppers sleep 7–8 hours. Sleep consolidates memory. Studying till 3am consistently will hurt your JEE more than help it.",tag:"Health"},
+  {icon:"💪",title:"Build Calculation Speed",desc:"Practice mental maths daily — squares upto 40, cubes upto 20, log tables, trig values. 30 seconds saved per question = 15 extra minutes.",tag:"Speed"},
+];
+
+const RESOURCE_DATA = [
+  {icon:"📗",title:"HC Verma (Physics)",desc:"The sacred text. Concepts of Physics Vol 1 & 2. Do every exercise. Non-negotiable.",tag:"Book · Physics"},
+  {icon:"📘",title:"RD Sharma + SL Loney",desc:"Mathematics backbone. SL Loney for Trigonometry and Coordinate Geometry is unmatched.",tag:"Book · Maths"},
+  {icon:"📙",title:"MS Chauhan (Organic Chem)",desc:"The best book for organic chemistry reactions and mechanisms. Do all problems.",tag:"Book · Chemistry"},
+  {icon:"🎥",title:"Physics Wallah (Alakh Sir)",desc:"Free YouTube lectures — exceptional for concept building, especially Physics and Chemistry.",tag:"YouTube · Free"},
+  {icon:"🎥",title:"3Blue1Brown",desc:"Mathematical intuition like no other. Essential for calculus, linear algebra, and deep understanding.",tag:"YouTube · Maths"},
+  {icon:"💻",title:"Unacademy / Vedantu",desc:"Structured online coaching. Good for doubt sessions and mock tests. Worth it for serious aspirants.",tag:"App · Coaching"},
+  {icon:"📱",title:"Anki Flashcards",desc:"Spaced repetition app. Make cards for formulae, reactions, and definitions. Study 15 min daily.",tag:"App · Free"},
+  {icon:"📄",title:"JEE Advanced PYQs",desc:"Download from jeemain.nta.nic.in. Last 15 years are gold. Solve topic-wise first, then full papers.",tag:"Resource · Free"},
+  {icon:"📐",title:"Irodov — Problems in Physics",desc:"For JEE Advanced Physics stretch problems. Hard, but solving 50% of it makes you exam-ready.",tag:"Book · Advanced"},
+  {icon:"🧮",title:"Resonance / Allen DPPs",desc:"Daily Practice Problems. If you're in coaching, do them religiously. If not, get PDF compilations.",tag:"Resource · Practice"},
+];
+
+// ===========================
+// QUIZ LOGIC
+// ===========================
+let currentQ = 0;
+let answers = [];
+
+function renderQuestion(){
+  const q = QUESTIONS[currentQ];
+  const pct = (currentQ/QUESTIONS.length)*100;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressText').textContent = currentQ+' / '+QUESTIONS.length;
+
+  let html = `<div class="question-card">
+    <div class="q-category">${q.cat}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options-grid">`;
+  const letters = ['A','B','C','D','E','F'];
+  q.opts.forEach((opt,i)=>{
+    html+=`<button class="option-btn" onclick="selectOption(${i},this)">
+      <span class="opt-letter">${letters[i]}</span>${opt}
+    </button>`;
+  });
+  html+=`</div>
+  <div class="quiz-actions">
+    <div></div>
+    <button class="btn-primary" id="nextBtn" onclick="nextQuestion()" disabled style="opacity:.4">
+      ${currentQ===QUESTIONS.length-1?'See My Result →':'Next Question →'}
+    </button>
+  </div>
+  </div>`;
+  document.getElementById('questionArea').innerHTML = html;
+}
+
+function selectOption(i, btn){
+  document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[currentQ] = i;
+  const nb = document.getElementById('nextBtn');
+  nb.disabled = false;
+  nb.style.opacity = '1';
+}
+
+function nextQuestion(){
+  if(answers[currentQ]===undefined)return;
+  currentQ++;
+  if(currentQ>=QUESTIONS.length){showResult();return;}
+  renderQuestion();
+}
+
+function showResult(){
+  document.getElementById('progressFill').style.width='100%';
+  document.getElementById('progressText').textContent='10 / 10';
+  document.getElementById('questionArea').innerHTML='';
+
+  // score branches
+  const scores = {};
+  Object.keys(BRANCH_SCORES).forEach(branch=>{
+    let s=0;
+    answers.forEach((ans,qi)=>{
+      const offset = qi*6+ans;
+      if(offset < BRANCH_SCORES[branch].length) s+=BRANCH_SCORES[branch][offset];
+    });
+    scores[branch]=s;
+  });
+
+  const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const [topBranch, topScore] = sorted[0];
+  const info = BRANCH_INFO[topBranch];
+  const maxScore = Math.max(...Object.values(scores));
+
+  let traitBars = sorted.slice(0,5).map(([b,s])=>{
+    const pct = Math.round((s/maxScore)*100);
+    const color = pct>75?'var(--accent)':pct>50?'var(--accent2)':'var(--accent3)';
+    const shortName = b.split('(')[0].trim();
+    return `<div class="trait-row">
+      <div class="trait-name">${shortName}</div>
+      <div class="trait-bar"><div class="trait-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div style="font-size:.78rem;color:var(--text3);font-family:var(--font-mono);width:35px">${pct}%</div>
+    </div>`;
+  }).join('');
+
+  let iitTags = info.iits.map((iit,i)=>
+    `<span class="iit-tag ${i===0?'top':''}">${i===0?'★ ':''} ${iit}</span>`
+  ).join('');
+
+  let careerTags = info.careers.map(c=>`<span class="tag tag-blue">${c}</span>`).join(' ');
+
+  const html = `<div class="result-card">
+    <div class="result-badge">✦ Your Best Match</div>
+    <div class="result-branch">${info.icon} ${topBranch}</div>
+    <div class="result-desc">${info.desc}</div>
+
+    <div class="result-iits">
+      <h4>Best IITs for this Branch</h4>
+      <div class="iit-tags">${iitTags}</div>
+    </div>
+
+    <div class="result-iits" style="margin-bottom:1rem">
+      <h4>Likely Careers</h4>
+      <div class="iit-tags">${careerTags}</div>
+    </div>
+
+    <div>
+      <h4 style="font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);font-family:var(--font-mono);margin-bottom:.75rem">Branch Match Breakdown</h4>
+      <div class="trait-bars">${traitBars}</div>
+    </div>
+
+    <div class="info-box">💡 <strong>Note:</strong> JEE Advanced rank required for <strong>${topBranch}</strong> at top IITs: approximately <strong>${info.rank}</strong> (General category). This requires being in the top 0.1–0.5% of JEE Advanced aspirants.</div>
+
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.25rem">
+      <button class="btn-primary" onclick="restartQuiz()">↺ Retake Quiz</button>
+      <button class="btn-secondary" onclick="showTab('branches')">Explore All Branches →</button>
+      <button class="btn-secondary" onclick="showTab('roadmap')">See Roadmap →</button>
+    </div>
+  </div>`;
+
+  document.getElementById('resultArea').classList.remove('hidden');
+  document.getElementById('resultArea').innerHTML = html;
+}
+
+function restartQuiz(){
+  currentQ=0;answers=[];
+  document.getElementById('resultArea').classList.add('hidden');
+  document.getElementById('resultArea').innerHTML='';
+  renderQuestion();
+}
+
+// ===========================
+// RENDER TABS
+// ===========================
+function renderBranches(){
+  const html = Object.entries(BRANCH_INFO).map(([name,info])=>`
+    <div class="guide-card" onclick="openBranchModal('${name.replace(/'/g,"\\'")}')">
+      <div class="card-icon">${info.icon}</div>
+      <div class="card-title">${name}</div>
+      <div class="card-desc">${info.short}</div>
+      <div style="margin-top:.75rem;display:flex;gap:.4rem;flex-wrap:wrap">
+        ${info.skills.slice(0,2).map(s=>`<span class="tag tag-amber">${s}</span>`).join('')}
+      </div>
+      <div class="card-tag">Rank: ${info.rank} · Tap to explore →</div>
+    </div>`).join('');
+  document.getElementById('branchCards').innerHTML = html;
+}
+
+function openBranchModal(name){
+  const info = BRANCH_INFO[name];
+  document.getElementById('modalTitle').innerHTML = `${info.icon} ${name}`;
+  document.getElementById('modalBody').innerHTML = `
+    <p>${info.desc}</p>
+    <h4>Key Skills You'll Learn</h4>
+    <ul>${info.skills.map(s=>`<li>${s}</li>`).join('')}</ul>
+    <h4>Career Paths</h4>
+    <ul>${info.careers.map(c=>`<li>${c}</li>`).join('')}</ul>
+    <h4>Best IITs for this Branch</h4>
+    <div class="iit-tags" style="margin-top:.5rem">${info.iits.map((iit,i)=>`<span class="iit-tag ${i===0?'top':''}">${iit}</span>`).join('')}</div>
+    <div class="info-box" style="margin-top:1rem">🎯 Expected JEE Advanced rank: <strong>${info.rank}</strong></div>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function renderRoadmap(){
+  const html = ROADMAP.map((item,i)=>`
+    <div class="tl-item">
+      <div class="tl-dot ${item.done?'':''}"></div>
+      <div class="tl-phase">${item.phase}</div>
+      <div class="tl-title">${item.title}</div>
+      <div class="tl-text">${item.text}</div>
+    </div>`).join('');
+  document.getElementById('roadmapTimeline').innerHTML = html;
+}
+
+function renderSyllabus(){
+  const html = Object.entries(SYLLABUS).map(([subj,data])=>`
+    <div class="subject-card">
+      <div class="subject-header">
+        <span class="subject-icon">${data.icon}</span>
+        <span class="subject-name">${subj}</span>
+      </div>
+      <ul class="chapter-list">
+        ${data.chapters.map(c=>`<li>${c}</li>`).join('')}
+      </ul>
+    </div>`).join('');
+  document.getElementById('syllabusGrid').innerHTML = html;
+}
+
+function renderStrategy(){
+  const html = STRATEGY_DATA.map(item=>`
+    <div class="guide-card">
+      <div class="card-icon">${item.icon}</div>
+      <div class="card-title">${item.title}</div>
+      <div class="card-desc">${item.desc}</div>
+      <div class="card-tag">${item.tag}</div>
+    </div>`).join('');
+  document.getElementById('strategyCards').innerHTML = html;
+}
+
+function renderColleges(){
+  const rankClass = r=>r<=3?'rank-top':r<=6?'rank-mid':'rank-ok';
+  const html = `<thead><tr><th>#</th><th>IIT</th><th>City</th><th>NIRF Rank</th><th>Best Branches</th><th>JEE Rank Range</th><th>Known For</th></tr></thead><tbody>`+
+    IIT_DATA.map(iit=>`<tr>
+      <td><span class="rank-badge ${rankClass(iit.rank)}">${iit.rank}</span></td>
+      <td style="font-weight:600;color:var(--text)">${iit.name}</td>
+      <td>${iit.city}</td>
+      <td>${iit.nirf}</td>
+      <td>${iit.topBranch}</td>
+      <td style="font-family:var(--font-mono);font-size:.82rem">${iit.jeeRank}</td>
+      <td style="color:var(--text3)">${iit.note}</td>
+    </tr>`).join('')+'</tbody>';
+  document.getElementById('iitTable').innerHTML = html;
+}
+
+function renderResources(){
+  const html = RESOURCE_DATA.map(item=>`
+    <div class="guide-card">
+      <div class="card-icon">${item.icon}</div>
+      <div class="card-title">${item.title}</div>
+      <div class="card-desc">${item.desc}</div>
+      <div class="card-tag">${item.tag}</div>
+    </div>`).join('');
+  document.getElementById('resourceCards').innerHTML = html;
+}
+
+// ===========================
+// TAB SWITCHING
+// ===========================
+const tabRenderers = {
+  branches:renderBranches,
+  roadmap:renderRoadmap,
+  syllabus:renderSyllabus,
+  strategy:renderStrategy,
+  colleges:renderColleges,
+  resources:renderResources,
+};
+const rendered = {};
+
+function showTab(name){
+  document.querySelectorAll('[id^="tab-"]').forEach(t=>t.classList.add('hidden'));
+  document.getElementById('tab-'+name).classList.remove('hidden');
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>{
+    t.classList.toggle('active', t.getAttribute('onclick').includes("'"+name+"'"));
+  });
+  if(tabRenderers[name] && !rendered[name]){
+    tabRenderers[name]();
+    rendered[name]=true;
+  }
+}
+
+// ===========================
+// SETTINGS
+// ===========================
+function openSettings(){document.getElementById('settingsOverlay').classList.add('open')}
+function closeSettings(){document.getElementById('settingsOverlay').classList.remove('open')}
+function handleOverlayClick(e){if(e.target===document.getElementById('settingsOverlay'))closeSettings()}
+
+function setTheme(name,el){
+  const body = document.body;
+  ['theme-cosmos','theme-solar','theme-arctic','theme-obsidian','theme-ember'].forEach(c=>body.classList.remove(c));
+  if(name!=='default') body.classList.add('theme-'+name);
+  document.querySelectorAll('.theme-swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function setFont(name,el){
+  ['font-playfair','font-syne','font-bebas','font-cormorant'].forEach(c=>document.body.classList.remove(c));
+  document.body.classList.add('font-'+name);
+  document.querySelectorAll('.font-option').forEach(f=>f.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function setDensity(name){
+  document.querySelectorAll('[id^="density-"]').forEach(el=>el.classList.remove('active'));
+  document.getElementById('density-'+name).classList.add('active');
+  const map={compact:'1.5rem',normal:'2.5rem',relaxed:'3.5rem'};
+  document.querySelectorAll('.content').forEach(c=>c.style.padding=map[name]+' 2rem');
+}
+
+// ===========================
+// MODAL
+// ===========================
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open')}
+function handleModalClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal()}
+
+// ===========================
+// INIT
+// ===========================
+renderQuestion();
+</script>
+</body>
+</html>
