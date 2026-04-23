@@ -1596,7 +1596,7 @@ const STRATEGY_DATA = [
 ];
 
 // ================================================================
-// DATA: RESOURCES  (Soham's specified books + others)
+// DATA: RESOURCES
 // ================================================================
 const RESOURCE_DATA = [
   // MATHEMATICS
@@ -1927,7 +1927,7 @@ function renderSylContent() {
   const groupsHtml = data.groups.map(g => `
     <div class="chapter-group">
       <div class="chapter-group-header">
-        <span class="chapter-group-icon">📂</span>${g.title}
+        <span class="chapter-group-icon"></span>${g.title}
       </div>
       <div class="chapter-group-body">
         ${g.chapters.map((ch,i) => `
@@ -1947,10 +1947,10 @@ function renderSylContent() {
         </div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap">
           <a href="${data.mainFile}" download class="syl-download-btn">
-            ⬇ Download Advanced Syllabus PDF
+            ⬇ Download JEE Advanced Latest Syllabus PDF
           </a>
           <a href="${data.jeeMainFile}" download class="syl-download-btn">
-            ⬇ Download Main Syllabus PDF
+            ⬇ Download JEE Main Latest Syllabus PDF
           </a>
         </div>
       </div>
