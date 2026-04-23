@@ -69,6 +69,18 @@
   --accent:#ff8c00; --accent-glow:rgba(255,140,0,.22);
   --accent2:#ff4500; --accent3:#ffc000; --text:#fff4e0; --text2:#cc8822; --text3:#885500;
 }
+.theme-blushing {
+  --bg:#0f080f; --bg2:#170d18; --bg3:#201220;
+  --surface:#2a1a2e; --surface2:#342038; --border:#4a2855; --border2:#6b3878;
+  --accent:#e0669a; --accent-glow:rgba(224,102,154,.22);
+  --accent2:#c084e8; --accent3:#f4a7c3; --text:#fdf0f8; --text2:#c088b0; --text3:#8855a0;
+}
+.theme-celeste {
+  --bg:#040f14; --bg2:#07161e; --bg3:#0c1f2a;
+  --surface:#102838; --surface2:#163245; --border:#1e4460; --border2:#2a5e80;
+  --accent:#48cae4; --accent-glow:rgba(72,202,228,.22);
+  --accent2:#90e0ef; --accent3:#00b4d8; --text:#e8f8ff; --text2:#6ab8d8; --text3:#3a7a9a;
+}
 
 /* --- Font Variants --- */
 .font-syne     { --font-display:'Syne',sans-serif; --font-body:'DM Sans',sans-serif; }
@@ -1018,6 +1030,8 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
         <div class="t-swatch" style="background:linear-gradient(135deg,#f0f5fb,#ffffff)" onclick="setTheme('arctic',this)"><span>Arctic</span></div>
         <div class="t-swatch" style="background:linear-gradient(135deg,#0a0a0a,#1a1a1a)" onclick="setTheme('obsidian',this)"><span>Obsidian</span></div>
         <div class="t-swatch" style="background:linear-gradient(135deg,#0c0600,#241400)" onclick="setTheme('ember',this)"><span>Ember</span></div>
+        <div class="t-swatch" style="background:linear-gradient(135deg,#0f080f,#2a1a2e)" onclick="setTheme('blushing',this)"><span>Blushing</span></div>
+        <div class="t-swatch" style="background:linear-gradient(135deg,#040f14,#102838)" onclick="setTheme('celeste',this)"><span>Celeste</span></div>
       </div>
     </div>
 
@@ -2085,7 +2099,7 @@ function openSettings()  { document.getElementById('settingsOverlay').classList.
 function closeSettings() { document.getElementById('settingsOverlay').classList.remove('open'); }
 function handleSettingsOverlay(e) { if (e.target === document.getElementById('settingsOverlay')) closeSettings(); }
 
-const THEME_CLASSES = ['theme-cosmos','theme-solar','theme-arctic','theme-obsidian','theme-ember'];
+const THEME_CLASSES = ['theme-cosmos','theme-solar','theme-arctic','theme-obsidian','theme-ember','theme-blushing','theme-celeste'];
 function setTheme(name, el) {
   THEME_CLASSES.forEach(c => document.body.classList.remove(c));
   if (name !== 'default') document.body.classList.add('theme-' + name);
