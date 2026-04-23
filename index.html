@@ -912,6 +912,7 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
       <button class="nav-tab"        onclick="showTab('strategy')" role="tab"><span class="tab-icon">⚡</span>Strategy</button>
       <button class="nav-tab"        onclick="showTab('colleges')" role="tab"><span class="tab-icon">🏆</span>IIT Rankings</button>
       <button class="nav-tab"        onclick="showTab('resources')" role="tab"><span class="tab-icon">📦</span>Resources</button>
+      <button class="nav-tab" onclick="showTab('examclock')" role="tab"><span class="tab-icon">⏳</span>Exam Clock</button>
     </nav>
   </div>
 
@@ -1008,6 +1009,54 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
     </div>
     <div class="cards-grid" id="resourceCards"></div>
   </div>
+
+   <!-- ============ TAB: EXAM CLOCK ============ -->
+<div id="tab-examclock" class="content hidden" role="tabpanel">
+  <div class="page-header">
+    <div class="page-eyebrow">Live Countdown</div>
+    <h1 class="section-title">Exam Clock</h1>
+    <p class="section-subtitle">Track exactly how many days, hours, and minutes remain until your JEE or NEET exam. Log scores, time your sessions — all in one place.</p>
+  </div>
+
+  <div style="
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    background:var(--surface);
+    position:relative;
+  ">
+    <!-- Top bar -->
+    <div style="
+      padding:.75rem 1.25rem;
+      background:var(--surface2);
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+    ">
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <span style="width:12px;height:12px;border-radius:50%;background:#f87171;display:inline-block;"></span>
+        <span style="width:12px;height:12px;border-radius:50%;background:#fbbf24;display:inline-block;"></span>
+        <span style="width:12px;height:12px;border-radius:50%;background:#4ade80;display:inline-block;"></span>
+        <span style="font-size:.75rem;color:var(--text3);font-family:var(--font-mono);margin-left:.5rem;">
+          examclock-jee-neet-aspirants.vercel.app
+        </span>
+      </div>
+      <a href="https://examclock-jee-neet-aspirants.vercel.app/"
+         target="_blank"
+         style="font-size:.72rem;font-family:var(--font-mono);color:var(--accent);text-decoration:none;letter-spacing:.04em;">
+        Open in new tab ↗
+      </a>
+    </div>
+
+    <!-- iframe -->
+    <iframe
+      src="https://examclock-jee-neet-aspirants.vercel.app/"
+      style="width:100%;height:82vh;border:none;display:block;"
+      loading="lazy"
+      title="ExamClock — JEE & NEET Countdown">
+    </iframe>
+  </div>
+</div>
 
 </div><!-- /#app -->
 <footer style="border-top:1px solid var(--border);padding:1.25rem 2rem;text-align:center;background:var(--bg2);">
@@ -2073,12 +2122,13 @@ function renderResources() {
 // TAB ROUTING
 // ================================================================
 const TAB_RENDERERS = {
-  branches: renderBranches,
-  roadmap:  renderRoadmap,
-  syllabus: renderSyllabus,
-  strategy: renderStrategy,
-  colleges: renderColleges,
-  resources:renderResources
+  branches:  renderBranches,
+  roadmap:   renderRoadmap,
+  syllabus:  renderSyllabus,
+  strategy:  renderStrategy,
+  colleges:  renderColleges,
+  resources: renderResources,
+  examclock: function(){} // iframe loads itself, no render needed
 };
 const renderedTabs = {};
 
