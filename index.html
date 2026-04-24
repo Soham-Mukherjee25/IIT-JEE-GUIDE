@@ -634,11 +634,19 @@ header {
 }
 .syl-download-btn:hover { border-color:var(--accent); color:var(--accent); }
 
-.chapters-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
 .chapter-group {
   background:var(--surface); border:1px solid var(--border);
   border-radius:var(--radius-sm); overflow:hidden;
+  position:relative; transition:all var(--transition);
 }
+.chapter-group::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--accent), var(--accent2));
+  opacity:0; transition:opacity var(--transition);
+}
+.chapter-group:hover::before { opacity:1; }
+.chapter-group:hover { border-color:var(--border2); }
+   
 .chapter-group-header {
   background:var(--surface2); padding:.85rem 1.1rem;
   font-weight:600; font-size:.88rem; border-bottom:1px solid var(--border);
