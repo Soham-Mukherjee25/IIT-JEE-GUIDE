@@ -645,8 +645,14 @@ header {
   opacity:0; transition:opacity var(--transition);
 }
 .chapter-group:hover::before { opacity:1; }
-.chapter-group:hover { border-color:var(--border2); }
-   
+.chapter-group:hover {
+  border-color:var(--border2);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-sm);
+}
+
+.chapters-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
+
 .chapter-group-header {
   background:var(--surface2); padding:.85rem 1.1rem;
   font-weight:600; font-size:.88rem; border-bottom:1px solid var(--border);
@@ -2385,7 +2391,7 @@ function renderDppContent() {
     ).join('');
 
     return `
-      <div class="chapter-group" style="margin-bottom:.75rem;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);">
+      <div class="chapter-group" style="margin-bottom:.75rem;">
         <div class="chapter-group-header"
              style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
           <div style="display:flex;align-items:center;gap:.6rem;">
