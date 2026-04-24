@@ -90,7 +90,7 @@
 /* ============================================================
    RESET & BASE
    ============================================================ */
-*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; touch-action:manipulation; }
 html { scroll-behavior:smooth; }
 body {
   background:var(--bg);
@@ -235,9 +235,20 @@ header {
   padding:2.5rem 2rem;
   max-width:1280px; margin:0 auto; width:100%;
   flex:1;
-  animation:fadeUp .4s ease both;
+  animation:fadeUp .35s cubic-bezier(.22,1,.36,1) both;
 }
-@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity:0; }
+  to   { opacity:1; }
+}
+@keyframes slideInRight {
+  from { opacity:0; transform:translateX(18px); }
+  to   { opacity:1; transform:translateX(0); }
+}
 
 /* ============================================================
    PAGE HEADERS
@@ -461,6 +472,7 @@ header {
   border-radius:var(--radius); padding:1.5rem;
   transition:all var(--transition); cursor:pointer;
   position:relative; overflow:hidden;
+  will-change:transform;
 }
 .card::before {
   content:''; position:absolute; top:0; left:0; right:0; height:2px;
@@ -504,6 +516,7 @@ header {
   background:var(--surface); border:1px solid var(--border);
   border-radius:var(--radius); overflow:hidden;
   transition:all var(--transition); cursor:pointer;
+  will-change:transform;
 }
 .branch-card:hover { border-color:var(--border2); transform:translateY(-4px); box-shadow:var(--shadow); }
 .branch-card-top {
@@ -638,6 +651,7 @@ header {
   background:var(--surface); border:1px solid var(--border);
   border-radius:var(--radius-sm); overflow:hidden;
   position:relative; transition:all var(--transition);
+  will-change:transform;
 }
 .chapter-group::before {
   content:''; position:absolute; top:0; left:0; right:0; height:2px;
@@ -740,7 +754,7 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
   width:320px; height:100vh; overflow-y:auto;
   padding:2rem 1.5rem;
   transform:translateX(100%);
-  transition:transform .38s cubic-bezier(.4,0,.2,1);
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
 }
 .settings-overlay.open .settings-panel { transform:translateX(0); }
 .settings-head {
@@ -798,7 +812,7 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
   border-radius:var(--radius); max-width:620px; width:100%;
   max-height:88vh; overflow-y:auto; padding:2rem;
   transform:scale(.94) translateY(12px);
-  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  transition:transform .4s cubic-bezier(.22,1,.36,1), opacity .3s ease;
 }
 .modal-overlay.open .modal { transform:scale(1) translateY(0); }
 .modal-head {
@@ -837,6 +851,11 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
 ::-webkit-scrollbar-track { background:var(--bg2); }
 ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
 ::-webkit-scrollbar-thumb:hover { background:var(--text3); }
+
+.content, .settings-panel, .modal {
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+}
 
 /* ============================================================
    RESPONSIVE
@@ -2529,13 +2548,19 @@ const TAB_RENDERERS = {
 const renderedTabs = {};
 
 function showTab(name) {
-  document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
+  document.querySelectorAll('[id^="tab-"]').forEach(t => {
+    t.classList.add('hidden');
+    t.style.animation = 'none';
+  });
   document.querySelectorAll('.nav-tab').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${name}'`));
   });
   const tabEl = document.getElementById('tab-' + name);
-  if (tabEl) { tabEl.classList.remove('hidden'); }
-
+  if (tabEl) {
+    tabEl.classList.remove('hidden');
+    tabEl.style.animation = '';
+    void tabEl.offsetWidth; // force reflow so animation restarts
+  }
   if (TAB_RENDERERS[name] && !renderedTabs[name]) {
     TAB_RENDERERS[name]();
     renderedTabs[name] = true;
