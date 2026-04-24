@@ -912,6 +912,7 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
       <button class="nav-tab"        onclick="showTab('strategy')" role="tab"><span class="tab-icon">⚡</span>Strategy</button>
       <button class="nav-tab"        onclick="showTab('colleges')" role="tab"><span class="tab-icon">🏆</span>IIT Rankings</button>
       <button class="nav-tab"        onclick="showTab('resources')" role="tab"><span class="tab-icon">📦</span>Resources</button>
+      <button class="nav-tab" onclick="showTab('dpp')" role="tab"><span class="tab-icon">📄</span>DPP & Notes</button>
       <button class="nav-tab" onclick="showTab('examclock')" role="tab"><span class="tab-icon">⏳</span>Exam Clock</button>
     </nav>
   </div>
@@ -1010,6 +1011,25 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
     <div class="cards-grid" id="resourceCards"></div>
   </div>
 
+   <!-- ============ TAB: DPP & NOTES ============ -->
+<div id="tab-dpp" class="content hidden" role="tabpanel">
+  <div class="page-header">
+    <div class="page-eyebrow">Chapter-wise Practice</div>
+    <h1 class="section-title">DPP & Short Notes</h1>
+    <p class="section-subtitle">Download Daily Practice Problems and concise notes for each chapter — organised by subject. More DPPs will be added as they arrive.</p>
+  </div>
+
+  <!-- Subject Filter Tabs -->
+  <div class="syllabus-tabs" id="dppSubjectTabs">
+    <button class="syl-tab active" onclick="switchDppSubject('Physics')">⚛️ Physics</button>
+    <button class="syl-tab" onclick="switchDppSubject('Chemistry')">🧬 Chemistry</button>
+    <button class="syl-tab" onclick="switchDppSubject('Mathematics')">∑ Mathematics</button>
+  </div>
+
+  <!-- DPP Cards Area -->
+  <div id="dppContent"></div>
+</div>
+   
    <!-- ============ TAB: EXAM CLOCK ============ -->
 <div id="tab-examclock" class="content hidden" role="tabpanel">
   <div class="page-header">
@@ -1647,6 +1667,288 @@ const SYLLABUS = {
 };
 
 // ================================================================
+// DATA: DPP & NOTES
+// ================================================================
+const DPP_DATA = {
+  Physics: [
+    {
+      chapter: "Units & Dimensions, Basic Mathematics And Vectors",
+      tag: "CLASS 11 · MECHANICS",
+      dpps: [
+        { label: "DPP 1 — Units, Dimensions & Vectors", file: "dpps/JEE_Main_Physics_DPP_1.pdf" }
+      ],
+      notes: []
+    },
+    {
+      chapter: "Kinematics",
+      tag: "CLASS 11 · MECHANICS",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Circular Motion",
+      tag: "CLASS 11 · MECHANICS",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Work, Energy And Power",
+      tag: "CLASS 11 · MECHANICS",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Rotational Dynamics",
+      tag: "CLASS 11 · MECHANICS",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Simple Harmonic Motion (SHM)",
+      tag: "CLASS 11 · MECHANICS",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Elasticity, Heat And Thermodynamics",
+      tag: "CLASS 11 · THERMAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Fluid Mechanics",
+      tag: "CLASS 11 · THERMAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Center Of Mass, Momentum And Collision",
+      tag: "CLASS 11 · MECHANICS",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Newton's Laws Of Motion And Friction",
+      tag: "CLASS 11 · MECHANICS",
+      dpps: [],
+      notes: []
+    }
+  ],
+  Chemistry: [
+    {
+      chapter: "Mole Concept",
+      tag: "CLASS 11 · PHYSICAL",
+      dpps: [
+        { label: "DPP 1 — Mole Concept", file: "dpps/JEE_Main_DPP_Chemistry_Mole_Concept.pdf" }
+      ],
+      notes: []
+    },
+    {
+      chapter: "Atomic Structure",
+      tag: "CLASS 11 · PHYSICAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Periodic Table",
+      tag: "CLASS 11 · INORGANIC",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Chemical Bonding",
+      tag: "CLASS 11 · INORGANIC",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "States Of Matter",
+      tag: "CLASS 11 · PHYSICAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Redox And Equivalent Concept",
+      tag: "CLASS 11 · PHYSICAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Thermodynamics 1 & 2",
+      tag: "CLASS 11 · PHYSICAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Thermochemistry",
+      tag: "CLASS 11 · PHYSICAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Chemical Equilibrium",
+      tag: "CLASS 11 · PHYSICAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Ionic Equilibrium",
+      tag: "CLASS 11 · PHYSICAL",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "IUPAC Nomenclature And Common Names",
+      tag: "CLASS 11 · ORGANIC",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Electronic Displacement Effect",
+      tag: "CLASS 11 · ORGANIC",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Structural Isomerism",
+      tag: "CLASS 11 · ORGANIC",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Geometrical Isomerism And Conformations",
+      tag: "CLASS 11 · ORGANIC",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Optical Isomerism",
+      tag: "CLASS 11 · ORGANIC",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Hydrocarbons",
+      tag: "CLASS 11 · ORGANIC",
+      dpps: [],
+      notes: []
+    }
+  ],
+  Mathematics: [
+    {
+      chapter: "Sets, Numbers And Intervals",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [],
+      notes: []
+    },
+     {
+      chapter: "Fundamentals Of Algebra",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Quadratic Equation",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Logarithm",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Sequences And Series",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Inequalities",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Mixed Algebra (Modulus + Logarithm)",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [
+        { label: "DPP 1 — Mixed Algebra", file: "dpps/JEE_Main_Mathematics_DPP_Mixed_Algebra.pdf" }
+      ],
+      notes: []
+    },
+    {
+      chapter: "Trigonometric Ratios And Identities",
+      tag: "CLASS 11 · TRIGONOMETRY",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Trigonometric Equations",
+      tag: "CLASS 11 · TRIGONOMETRY",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Solution Of Triangles",
+      tag: "CLASS 11 · TRIGONOMETRY",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Permutations And Combinations",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Binomial Theorem",
+      tag: "CLASS 11 · ALGEBRA",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Straight Line",
+      tag: "CLASS 11 · COORDINATE GEOMETRY",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Circle",
+      tag: "CLASS 11 · COORDINATE GEOMETRY",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Parabola",
+      tag: "CLASS 11 · COORDINATE GEOMETRY",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Ellipse",
+      tag: "CLASS 11 · COORDINATE GEOMETRY",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Hyperbola",
+      tag: "CLASS 11 · COORDINATE GEOMETRY",
+      dpps: [],
+      notes: []
+    },
+    {
+      chapter: "Statistics",
+      tag: "CLASS 11 · MISCELLANEOUS",
+      dpps: [],
+      notes: []
+    }
+  ]
+};
+
+// ================================================================
 // DATA: STRATEGY
 // ================================================================
 const STRATEGY_DATA = [
@@ -2024,7 +2326,86 @@ function renderSylContent() {
       <div class="chapters-grid">${groupsHtml}</div>
     </div>`;
 }
+   
+// ================================================================
+// RENDER: DPP & NOTES TAB
+// ================================================================
+let activeDppSubject = 'Physics';
 
+function switchDppSubject(subj) {
+  activeDppSubject = subj;
+  document.querySelectorAll('#dppSubjectTabs .syl-tab').forEach((btn, i) => {
+    btn.classList.toggle('active', ['Physics','Chemistry','Mathematics'][i] === subj);
+  });
+  renderDppContent();
+}
+
+function renderDppContent() {
+  const chapters = DPP_DATA[activeDppSubject] || [];
+
+  const html = chapters.map(ch => {
+    const hasDpp   = ch.dpps.length   > 0;
+    const hasNotes = ch.notes.length  > 0;
+    const hasAny   = hasDpp || hasNotes;
+
+    const dppLinks = ch.dpps.map(d =>
+      `<a href="${d.file}" download
+          style="display:inline-flex;align-items:center;gap:.4rem;
+                 background:color-mix(in srgb,var(--accent) 12%,var(--bg3));
+                 border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+                 color:var(--accent);padding:.3rem .8rem;border-radius:6px;
+                 font-size:.76rem;font-family:var(--font-mono);text-decoration:none;
+                 transition:all .2s;" 
+          onmouseover="this.style.background='color-mix(in srgb,var(--accent) 22%,var(--bg3))'"
+          onmouseout="this.style.background='color-mix(in srgb,var(--accent) 12%,var(--bg3))'">
+         ⬇ ${d.label}
+       </a>`
+    ).join('');
+
+    const noteLinks = ch.notes.map(n =>
+      `<a href="${n.file}" download
+          style="display:inline-flex;align-items:center;gap:.4rem;
+                 background:color-mix(in srgb,var(--accent2) 12%,var(--bg3));
+                 border:1px solid color-mix(in srgb,var(--accent2) 35%,transparent);
+                 color:var(--accent2);padding:.3rem .8rem;border-radius:6px;
+                 font-size:.76rem;font-family:var(--font-mono);text-decoration:none;
+                 transition:all .2s;"
+          onmouseover="this.style.background='color-mix(in srgb,var(--accent2) 22%,var(--bg3))'"
+          onmouseout="this.style.background='color-mix(in srgb,var(--accent2) 12%,var(--bg3))'">
+         📝 ${n.label}
+       </a>`
+    ).join('');
+
+    return `
+      <div class="chapter-group" style="margin-bottom:.75rem;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);">
+        <div class="chapter-group-header"
+             style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+          <div style="display:flex;align-items:center;gap:.6rem;">
+            <span style="font-size:.95rem">${activeDppSubject === 'Physics' ? '⚛️' : activeDppSubject === 'Chemistry' ? '🧬' : '∑'}</span>
+            <span style="font-size:.88rem;font-weight:600">${ch.chapter}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+            <span class="tag tag-amber" style="font-size:.65rem">${ch.tag}</span>
+            ${hasDpp   ? '<span class="tag tag-blue"   style="font-size:.65rem">DPP ✓</span>'   : ''}
+            ${hasNotes ? '<span class="tag tag-purple" style="font-size:.65rem">Notes ✓</span>' : ''}
+            ${!hasAny  ? '<span class="tag" style="font-size:.65rem;color:var(--text3)">Coming Soon</span>' : ''}
+          </div>
+        </div>
+        ${hasAny ? `
+        <div class="chapter-group-body" style="display:flex;flex-wrap:wrap;gap:.5rem;padding:.85rem 1.1rem;">
+          ${dppLinks}
+          ${noteLinks}
+        </div>` : ''}
+      </div>`;
+  }).join('');
+
+  document.getElementById('dppContent').innerHTML = `<div class="syl-content">${html}</div>`;
+}
+
+function renderDpp() {
+  renderDppContent();
+}
+   
 // ================================================================
 // RENDER: STRATEGY TAB
 // ================================================================
@@ -2128,7 +2509,8 @@ const TAB_RENDERERS = {
   strategy:  renderStrategy,
   colleges:  renderColleges,
   resources: renderResources,
-  examclock: function(){} // iframe loads itself, no render needed
+  dpp:       renderDpp,
+  examclock: function(){}
 };
 const renderedTabs = {};
 
