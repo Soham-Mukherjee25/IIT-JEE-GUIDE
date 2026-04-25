@@ -196,12 +196,59 @@ header {
 .header-pill span { color:var(--accent4); }
 
 /* ============================================================
+QUOTE TICKER
+============================================================ */
+.quote-ticker {
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg2));
+  border-bottom: 1px solid var(--border);
+  padding: .45rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  overflow: hidden;
+  position: sticky;
+  top: 73px;
+  z-index: 98;
+}
+.ticker-icon {
+  color: var(--accent);
+  font-size: .7rem;
+  flex-shrink: 0;
+  animation: tickerPulse 3s ease-in-out infinite;
+}
+@keyframes tickerPulse {
+  0%, 100% { opacity: .4; }
+  50%       { opacity: 1; }
+}
+.ticker-text {
+  font-size: .78rem;
+  color: var(--text2);
+  font-style: italic;
+  font-family: var(--font-body);
+  transition: opacity .7s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+.ticker-attr {
+  font-size: .7rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  letter-spacing: .04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity .7s ease;
+}
+.ticker-text.fade, .ticker-attr.fade { opacity: 0; }
+   
+/* ============================================================
    NAV TABS
    ============================================================ */
 .nav-wrap {
   background:var(--bg2);
   border-bottom:1px solid var(--border);
-  position:sticky; top:72px; z-index:99;
+  position:sticky; top:108px; z-index:99;
 }
 .nav-tabs {
   display:flex; gap:0; overflow-x:auto;
@@ -935,6 +982,13 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
     </div>
   </header>
 
+<!-- QUOTE TICKER -->
+<div class="quote-ticker" id="quoteTicker">
+  <span class="ticker-icon">✦</span>
+  <span class="ticker-text" id="tickerText"></span>
+  <span class="ticker-attr" id="tickerAttr"></span>
+</div>
+   
   <!-- NAV TABS -->
   <div class="nav-wrap">
     <nav class="nav-tabs" role="tablist">
@@ -1182,6 +1236,28 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
      ALL DATA + LOGIC
      ============================================================ -->
 <script>
+
+// ================================================================
+// QUOTE TICKER
+// ================================================================
+const TICKER_QUOTES = [
+  { text: "The expert in anything was once a beginner.", attr: "— Helen Hayes" },
+  { text: "JEE is not about being smart. It is about being consistent.", attr: "— IIT Topper, AIR 1" },
+  { text: "Imagination is more important than knowledge.", attr: "— Albert Einstein" },
+  { text: "Study not to pass the exam, but to master the subject.", attr: "— IIT Madras Alumnus" },
+  { text: "Success is the sum of small efforts repeated day in and day out.", attr: "— Robert Collier" },
+  { text: "The pain of discipline is far less than the pain of regret.", attr: "— Unknown Topper" },
+  { text: "Do not watch the clock. Do what it does — keep going.", attr: "— Sam Levenson" },
+  { text: "A good rank is a byproduct of genuine curiosity.", attr: "— IIT Bombay CSE Graduate" },
+  { text: "Science is not a collection of facts. It is a way of thinking.", attr: "— Carl Sagan" },
+  { text: "Every expert was once a student who refused to quit.", attr: "— Anonymous" },
+  { text: "Hard work beats talent when talent doesn't work hard.", attr: "— Tim Notke" },
+  { text: "The beautiful thing about learning is nobody can take it from you.", attr: "— B.B. King" },
+  { text: "Don't count the days. Make the days count.", attr: "— Muhammad Ali" },
+  { text: "One hour per day of study in your chosen field is all it takes.", attr: "— Earl Nightingale" },
+  { text: "Solving one PYQ deeply is worth more than skimming ten chapters.", attr: "— IIT Delhi AIR 7" },
+];
+   
 // ================================================================
 // DATA: QUIZ QUESTIONS
 // ================================================================
@@ -2610,6 +2686,36 @@ document.addEventListener('keydown', e => {
   buildStepDots();
   renderQuestion();
 })();
+
+// ================================================================
+// QUOTE TICKER
+// ================================================================
+(function initTicker() {
+  let idx = Math.floor(Math.random() * TICKER_QUOTES.length);
+  const textEl = document.getElementById('tickerText');
+  const attrEl = document.getElementById('tickerAttr');
+  if (!textEl || !attrEl) return;
+
+  function setQuote(q) {
+    textEl.textContent = '"' + q.text + '"';
+    attrEl.textContent = q.attr;
+  }
+
+  function cycleTicker() {
+    textEl.classList.add('fade');
+    attrEl.classList.add('fade');
+    setTimeout(() => {
+      idx = (idx + 1) % TICKER_QUOTES.length;
+      setQuote(TICKER_QUOTES[idx]);
+      textEl.classList.remove('fade');
+      attrEl.classList.remove('fade');
+    }, 700);
+  }
+
+  setQuote(TICKER_QUOTES[idx]);
+  setInterval(cycleTicker, 6000);
+})();
+   
 </script>
 </body>
 </html>
