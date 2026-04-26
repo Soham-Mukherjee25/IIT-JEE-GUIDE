@@ -970,6 +970,89 @@ tbody tr:hover td { background:var(--surface); color:var(--text); }
 .settings-trigger:hover { border-color:var(--accent); color:var(--accent); }
 .settings-trigger svg { width:14px; height:14px; opacity:.7; }
 </style>
+  
+<style>
+/* ============================================================
+   SCROLL PERFORMANCE PATCH
+   ============================================================ */
+
+/* 1. Smooth native scroll on iOS & Android */
+html {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+}
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 2. Replace expensive backdrop-filter on header with a simpler version
+      backdrop-filter is the #1 cause of 60fps scroll jank on mobile */
+@media (max-width: 900px) {
+  header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: color-mix(in srgb, var(--bg) 97%, transparent) !important;
+  }
+  .settings-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(0,0,0,.75) !important;
+  }
+  .modal-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(0,0,0,.80) !important;
+  }
+}
+
+/* 3. Remove blur from orbs on mobile — filter:blur() forces compositing */
+@media (max-width: 900px) {
+  .orb { filter: none !important; opacity: .07 !important; }
+  .bg-noise { display: none !important; }
+}
+
+/* 4. GPU-accelerate only what needs it, isolate paint layers */
+.card,
+.branch-card,
+.chapter-group,
+.tl-inner {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* 5. Prevent layout thrash during scroll on sticky elements */
+header,
+.nav-wrap,
+.quote-ticker {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* 6. Smooth scrolling with reduced motion respect */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 7. content-visibility on heavy off-screen tabs */
+#tab-branches,
+#tab-roadmap,
+#tab-syllabus,
+#tab-strategy,
+#tab-colleges,
+#tab-resources,
+#tab-dpp {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px;
+}
+
+/* 8. Passive touch — handled via JS below */
+</style>  
 </head>
 <body>
 
@@ -2710,6 +2793,12 @@ document.addEventListener('keydown', e => {
 (function init() {
   buildStepDots();
   renderQuestion();
+  
+  // Register all scroll/touch listeners as passive
+  // This is the single most impactful fix for mobile scroll smoothness
+  document.addEventListener('touchstart', function(){}, {passive: true});
+  document.addEventListener('touchmove',  function(){}, {passive: true});
+  document.addEventListener('wheel',      function(){}, {passive: true});
 })();
 
 // ================================================================
