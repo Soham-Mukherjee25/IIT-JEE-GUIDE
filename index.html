@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>IIT JEE — Command Centre</title>
+<meta name="description" content="IIT JEE Command Centre — Branch finder quiz, complete syllabus, roadmap, IIT rankings, strategy, and DPPs for JEE 2026 aspirants."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=Space+Grotesk:wght@300;400;600&family=Bebas+Neue&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
 <style>
@@ -2713,7 +2714,7 @@ document.addEventListener('keydown', e => {
   }
 
   setQuote(TICKER_QUOTES[idx]);
-  setInterval(cycleTicker, 6000);
+  window.addEventListener('load', () => setInterval(cycleTicker, 6000));
 })();
    
 </script>
