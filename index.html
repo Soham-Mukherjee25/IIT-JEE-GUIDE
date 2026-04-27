@@ -1063,7 +1063,252 @@ header,
   contain-intrinsic-size: 0 600px;
 }
 
-/* 8. Passive touch — handled via JS below */
+/* ============================================================
+   STUDY PLANNER
+   ============================================================ */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .5rem;
+  margin-bottom: 1.75rem;
+}
+@media (max-width: 900px) {
+  .week-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 540px) {
+  .week-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.day-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .65rem .7rem;
+  min-height: 110px;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.day-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.day-card.revision-day {
+  background: color-mix(in srgb, var(--accent2) 8%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent2) 30%, transparent);
+}
+.day-card.mock-day {
+  background: color-mix(in srgb, var(--danger) 8%, var(--surface));
+  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+}
+.day-card-header {
+  font-size: .65rem;
+  font-family: var(--font-mono);
+  color: var(--text3);
+  margin-bottom: .45rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.day-card-date {
+  font-size: .7rem;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-weight: 600;
+}
+.day-session {
+  border-radius: 5px;
+  padding: .22rem .45rem;
+  font-size: .67rem;
+  margin-bottom: .25rem;
+  line-height: 1.35;
+  font-weight: 500;
+}
+.day-session.phy {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+}
+.day-session.che {
+  background: color-mix(in srgb, var(--accent2) 14%, transparent);
+  color: var(--accent2);
+  border: 1px solid color-mix(in srgb, var(--accent2) 28%, transparent);
+}
+.day-session.mat {
+  background: color-mix(in srgb, var(--accent3) 14%, transparent);
+  color: var(--accent3);
+  border: 1px solid color-mix(in srgb, var(--accent3) 28%, transparent);
+}
+.day-session.rev {
+  background: color-mix(in srgb, var(--accent2) 10%, transparent);
+  color: var(--accent2);
+  border: 1px solid color-mix(in srgb, var(--accent2) 22%, transparent);
+  font-style: italic;
+}
+.day-session.mock {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--danger);
+  border: 1px solid color-mix(in srgb, var(--danger) 25%, transparent);
+}
+.planner-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 640px) {
+  .planner-stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.planner-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.25rem;
+  text-align: center;
+}
+.planner-stat-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: .3rem;
+}
+.planner-stat-label {
+  font-size: .72rem;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.week-label {
+  font-size: .7rem;
+  font-family: var(--font-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: .6rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--border);
+}
+.priority-btns {
+  display: flex;
+  gap: .35rem;
+}
+.priority-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text3);
+  padding: .3rem .75rem;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.priority-btn:hover { border-color: var(--border2); color: var(--text2); }
+.priority-btn.active-low    { border-color: var(--accent3); color: var(--accent3); background: color-mix(in srgb, var(--accent3) 10%, transparent); }
+.priority-btn.active-medium { border-color: var(--accent);  color: var(--accent);  background: color-mix(in srgb, var(--accent)  10%, transparent); }
+.priority-btn.active-high   { border-color: var(--danger);  color: var(--danger);  background: color-mix(in srgb, var(--danger)  10%, transparent); }
+.chapter-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: .3rem;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: .5rem 0;
+}
+.chapter-checkbox-grid::-webkit-scrollbar { width: 4px; }
+.chapter-checkbox-grid::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.ch-check-label {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .79rem;
+  color: var(--text2);
+  cursor: pointer;
+  padding: .25rem .4rem;
+  border-radius: 6px;
+  transition: background var(--transition);
+  line-height: 1.35;
+}
+.ch-check-label:hover { background: var(--surface2); color: var(--text); }
+.ch-check-label input[type=checkbox] {
+  accent-color: var(--accent);
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.planner-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.planner-section-head {
+  background: var(--surface2);
+  padding: .85rem 1.1rem;
+  font-weight: 600;
+  font-size: .88rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.planner-section-body { padding: 1rem 1.1rem; }
+.planner-input {
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  padding: .6rem .9rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: .88rem;
+  outline: none;
+  transition: border-color var(--transition);
+  width: 100%;
+}
+.planner-input:focus { border-color: var(--accent); }
+.planner-input::placeholder { color: var(--text3); }
+.planner-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 540px) {
+  .planner-two-col { grid-template-columns: 1fr; }
+}
+.planner-label {
+  font-size: .72rem;
+  font-family: var(--font-mono);
+  color: var(--text3);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: .4rem;
+  display: block;
+}
+.chapter-search {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: .45rem .8rem;
+  border-radius: var(--radius-sm);
+  font-size: .8rem;
+  font-family: var(--font-body);
+  outline: none;
+  width: 100%;
+  margin-bottom: .6rem;
+  transition: border-color var(--transition);
+}
+.chapter-search:focus { border-color: var(--accent); }
+.chapter-search::placeholder { color: var(--text3); }
+.selected-count {
+  font-size: .7rem;
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+ 
 </style>  
 </head>
 <body>
@@ -1129,6 +1374,7 @@ header,
       <button class="nav-tab"        onclick="showTab('colleges')" role="tab"><span class="tab-icon">🏆</span>IIT Rankings</button>
       <button class="nav-tab"        onclick="showTab('resources')" role="tab"><span class="tab-icon">📦</span>Resources</button>
       <button class="nav-tab" onclick="showTab('dpp')" role="tab"><span class="tab-icon">📄</span>DPP & Notes</button>
+      <button class="nav-tab" onclick="showTab('planner')" role="tab"><span class="tab-icon">📅</span>Study Planner</button>
       <button class="nav-tab" onclick="showTab('examclock')" role="tab"><span class="tab-icon">⏳</span>Exam Clock</button>
     </nav>
   </div>
@@ -1245,7 +1491,17 @@ header,
   <!-- DPP Cards Area -->
   <div id="dppContent"></div>
 </div>
-   
+
+  <!-- ============ TAB: STUDY PLANNER ============ -->
+<div id="tab-planner" class="content hidden" role="tabpanel" style="content-visibility:auto">
+  <div class="page-header">
+    <div class="page-eyebrow">Personalised Schedule</div>
+    <h1 class="section-title">Study Planner</h1>
+    <p class="section-subtitle">Enter your available hours, target exam date, and weak chapters — we'll build a smart day-by-day timetable with revision and mock test days built in.</p>
+  </div>
+  <div id="plannerApp"></div>
+</div>
+  
    <!-- ============ TAB: EXAM CLOCK ============ -->
 <div id="tab-examclock" class="content hidden" role="tabpanel" style="content-visibility:auto">
   <div class="page-header">
@@ -2738,6 +2994,371 @@ function renderResources() {
 }
 
 // ================================================================
+// STUDY PLANNER
+// ================================================================
+const PLANNER_CHAPTERS = {
+  Physics:     SYLLABUS.Physics.groups.flatMap(g => g.chapters),
+  Chemistry:   SYLLABUS.Chemistry.groups.flatMap(g => g.chapters),
+  Mathematics: SYLLABUS.Mathematics.groups.flatMap(g => g.chapters)
+};
+
+const SUBJ_ICON = { Physics:'⚛️', Chemistry:'🧬', Mathematics:'∑' };
+const SUBJ_CLASS = { Physics:'phy', Chemistry:'che', Mathematics:'mat' };
+
+let plannerState = {
+  step: 1,
+  hoursPerDay: 6,
+  examDate: '',
+  weakChapters: { Physics:[], Chemistry:[], Mathematics:[] },
+  priorities: { Physics:'Medium', Chemistry:'Medium', Mathematics:'Medium' },
+  schedule: []
+};
+
+function loadPlannerState() {
+  try {
+    const saved = localStorage.getItem('jee_planner_v2');
+    if (saved) plannerState = JSON.parse(saved);
+  } catch(e) {}
+}
+
+function savePlannerState() {
+  try { localStorage.setItem('jee_planner_v2', JSON.stringify(plannerState)); } catch(e) {}
+}
+
+function renderPlanner() {
+  loadPlannerState();
+  if (plannerState.step === 2 && plannerState.schedule.length > 0) {
+    renderPlannerOutput();
+  } else {
+    plannerState.step = 1;
+    renderPlannerForm();
+  }
+}
+
+// ----------------------------------------------------------------
+// FORM
+// ----------------------------------------------------------------
+function renderPlannerForm() {
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  const subjectSections = ['Physics','Chemistry','Mathematics'].map(subj => {
+    const weak = plannerState.weakChapters[subj];
+    const pri  = plannerState.priorities[subj];
+
+    const checkboxes = PLANNER_CHAPTERS[subj].map((ch, i) => {
+      const id      = `ch_${subj}_${i}`;
+      const checked = weak.includes(ch) ? 'checked' : '';
+      return `<label class="ch-check-label" for="${id}">
+        <input type="checkbox" id="${id}" value="${ch}" ${checked}
+               onchange="toggleWeakChapter('${subj}', this)">
+        ${ch}
+      </label>`;
+    }).join('');
+
+    return `
+      <div class="planner-section">
+        <div class="planner-section-head">
+          <span>${SUBJ_ICON[subj]} ${subj}</span>
+          <div style="display:flex;align-items:center;gap:.75rem;">
+            <span class="selected-count" id="count_${subj}">${weak.length} weak</span>
+            <div class="priority-btns">
+              <button class="priority-btn${pri==='Low'?' active-low':''}"
+                      onclick="setPriority('${subj}','Low',this)">Low</button>
+              <button class="priority-btn${pri==='Medium'?' active-medium':''}"
+                      onclick="setPriority('${subj}','Medium',this)">Medium</button>
+              <button class="priority-btn${pri==='High'?' active-high':''}"
+                      onclick="setPriority('${subj}','High',this)">High</button>
+            </div>
+          </div>
+        </div>
+        <div class="planner-section-body">
+          <input class="chapter-search" placeholder="Search chapters…"
+                 oninput="filterChapterSearch(this,'grid_${subj}')"/>
+          <div class="chapter-checkbox-grid" id="grid_${subj}">${checkboxes}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('plannerApp').innerHTML = `
+    <div class="planner-section" style="margin-bottom:1rem">
+      <div class="planner-section-head">📋 Basic Info</div>
+      <div class="planner-section-body">
+        <div class="planner-two-col">
+          <div>
+            <label class="planner-label">Hours available per day</label>
+            <input type="number" class="planner-input" min="2" max="14"
+                   value="${plannerState.hoursPerDay}"
+                   oninput="plannerState.hoursPerDay=Math.max(2,Math.min(14,+this.value));savePlannerState()"/>
+          </div>
+          <div>
+            <label class="planner-label">Target exam date</label>
+            <input type="date" class="planner-input" min="${todayStr}"
+                   value="${plannerState.examDate}"
+                   onchange="plannerState.examDate=this.value;savePlannerState()"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="planner-section" style="margin-bottom:1rem">
+      <div class="planner-section-head">
+        🎯 Subject Priority &amp; Weak Chapters
+        <span style="font-size:.72rem;color:var(--text3);font-family:var(--font-mono);">
+          Tick the chapters you find difficult
+        </span>
+      </div>
+      <div class="planner-section-body" style="padding-top:.5rem">
+        ${subjectSections}
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:.75rem;margin-top:1.5rem">
+      <button class="btn-secondary" onclick="resetPlanner()">↺ Reset</button>
+      <button class="btn-primary" onclick="generateSchedule()">
+        Generate My Timetable ✦
+      </button>
+    </div>`;
+}
+
+function toggleWeakChapter(subj, checkbox) {
+  const ch   = checkbox.value;
+  const list = plannerState.weakChapters[subj];
+  if (checkbox.checked) { if (!list.includes(ch)) list.push(ch); }
+  else { const i = list.indexOf(ch); if (i > -1) list.splice(i,1); }
+  const el = document.getElementById('count_' + subj);
+  if (el) el.textContent = list.length + ' weak';
+  savePlannerState();
+}
+
+function setPriority(subj, level, btn) {
+  plannerState.priorities[subj] = level;
+  btn.closest('.priority-btns').querySelectorAll('.priority-btn').forEach(b => {
+    b.className = 'priority-btn';
+  });
+  btn.classList.add('active-' + level.toLowerCase());
+  savePlannerState();
+}
+
+function filterChapterSearch(input, gridId) {
+  const q     = input.value.toLowerCase();
+  const grid  = document.getElementById(gridId);
+  if (!grid) return;
+  grid.querySelectorAll('.ch-check-label').forEach(label => {
+    label.style.display = label.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function resetPlanner() {
+  plannerState = {
+    step:1, hoursPerDay:6, examDate:'',
+    weakChapters:{Physics:[],Chemistry:[],Mathematics:[]},
+    priorities:{Physics:'Medium',Chemistry:'Medium',Mathematics:'Medium'},
+    schedule:[]
+  };
+  savePlannerState();
+  renderPlannerForm();
+}
+
+// ----------------------------------------------------------------
+// SCHEDULE GENERATION
+// ----------------------------------------------------------------
+function generateSchedule() {
+  if (!plannerState.examDate) {
+    alert('Please pick your exam date first!');
+    return;
+  }
+
+  const today        = new Date(); today.setHours(0,0,0,0);
+  const exam         = new Date(plannerState.examDate);
+  const daysLeft     = Math.max(1, Math.round((exam - today) / 86400000));
+  const hpd          = plannerState.hoursPerDay;
+
+  // Build weighted chapter pool
+  const pool = [];
+  const WEIGHT = {
+    weak:   { High:5, Medium:3, Low:2 },
+    normal: { High:2, Medium:1, Low:0.5 }
+  };
+
+  ['Physics','Chemistry','Mathematics'].forEach(subj => {
+    const pri  = plannerState.priorities[subj];
+    const weak = plannerState.weakChapters[subj];
+    PLANNER_CHAPTERS[subj].forEach(ch => {
+      const isWeak = weak.includes(ch);
+      const w      = isWeak ? WEIGHT.weak[pri] : WEIGHT.normal[pri];
+      pool.push({ subj, ch, w, isWeak });
+    });
+  });
+
+  const totalWeight = pool.reduce((s,c) => s + c.w, 0);
+
+  // Assign hours (minimum 1 per chapter, proportional)
+  const revisionDays = Math.floor(daysLeft / 7);
+  const mockDays     = Math.floor(daysLeft / 14);
+  const studyDays    = daysLeft - revisionDays - mockDays;
+  const totalHours   = studyDays * hpd;
+
+  pool.forEach(item => {
+    item.hours = Math.max(1, Math.round((item.w / totalWeight) * totalHours));
+  });
+
+  // Flatten into a queue of sessions (1-hr blocks)
+  const queue = [];
+  pool.forEach(item => {
+    for (let h = 0; h < item.hours; h++) {
+      queue.push({ subject: item.subj, chapter: item.ch, isWeak: item.isWeak });
+    }
+  });
+
+  // Shuffle weakly (keep subject rotation)
+  const bySubj = { Physics:[], Chemistry:[], Mathematics:[] };
+  queue.forEach(s => bySubj[s.subject].push(s));
+
+  const interleaved = [];
+  const subjOrder   = ['Physics','Chemistry','Mathematics'];
+  let   si          = 0;
+  while (subjOrder.some(s => bySubj[s].length)) {
+    const subj = subjOrder[si % 3];
+    si++;
+    if (bySubj[subj].length) interleaved.push(bySubj[subj].shift());
+  }
+
+  // Build day-by-day schedule
+  const schedule = [];
+  let   qIdx     = 0;
+  let   weekDay  = 0;
+
+  for (let d = 0; d < daysLeft; d++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + d);
+    const dateStr = date.toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+    weekDay++;
+
+    const isRevision = weekDay % 7 === 0;
+    const isMock     = weekDay % 14 === 0;
+
+    if (isMock) {
+      schedule.push({
+        dayNum: d + 1, date: dateStr, type: 'mock',
+        sessions: [{ subject:'All', chapter:'🧪 Full Mock Test — 3 Hours', hours:3, type:'mock' }]
+      });
+      continue;
+    }
+
+    if (isRevision) {
+      const revSessions = subjOrder.map(s => ({
+        subject:s, chapter:`📖 Revision — ${s}`,
+        hours: Math.max(1, Math.floor(hpd/3)), type:'revision'
+      }));
+      schedule.push({ dayNum:d+1, date:dateStr, type:'revision', sessions:revSessions });
+      continue;
+    }
+
+    // Normal study day — fill up to hoursPerDay
+    const sessions = [];
+    let   filled   = 0;
+    while (filled < hpd && qIdx < interleaved.length) {
+      sessions.push({ ...interleaved[qIdx++], hours:1, type:'study' });
+      filled++;
+    }
+    schedule.push({ dayNum:d+1, date:dateStr, type:'study', sessions });
+  }
+
+  plannerState.schedule = schedule;
+  plannerState.step     = 2;
+  savePlannerState();
+  renderPlannerOutput();
+}
+
+// ----------------------------------------------------------------
+// OUTPUT
+// ----------------------------------------------------------------
+function renderPlannerOutput() {
+  const s      = plannerState.schedule;
+  const total  = s.length;
+  const hours  = s.reduce((acc, d) => acc + d.sessions.reduce((a,ss) => a+ss.hours, 0), 0);
+  const mocks  = s.filter(d => d.type === 'mock').length;
+  const chaps  = new Set(s.flatMap(d => d.sessions.map(ss => ss.chapter))).size;
+
+  // Group into weeks
+  const weeks = [];
+  for (let i = 0; i < s.length; i += 7) weeks.push(s.slice(i, i+7));
+
+  const weeksHtml = weeks.map((week, wi) => {
+    const days = week.map(day => {
+      const sessions = day.sessions.slice(0, 4).map(ss => {
+        const cls   = ss.type === 'mock' ? 'mock' : ss.type === 'revision' ? 'rev' : SUBJ_CLASS[ss.subject] || 'phy';
+        const label = ss.chapter.length > 28 ? ss.chapter.slice(0,26) + '…' : ss.chapter;
+        return `<div class="day-session ${cls}">${label}</div>`;
+      }).join('');
+      const extra = day.sessions.length > 4
+        ? `<div style="font-size:.63rem;color:var(--text3);margin-top:.2rem;font-family:var(--font-mono)">+${day.sessions.length-4} more</div>` : '';
+      const dayIcon = day.type === 'mock' ? '🧪' : day.type === 'revision' ? '📖' : '';
+      return `<div class="day-card ${day.type === 'revision' ? 'revision-day' : day.type === 'mock' ? 'mock-day' : ''}">
+        <div class="day-card-header">
+          <span>Day ${day.dayNum} ${dayIcon}</span>
+          <span class="day-card-date">${day.date}</span>
+        </div>
+        ${sessions}${extra}
+      </div>`;
+    }).join('');
+
+    return `
+      <div class="week-label">Week ${wi + 1}</div>
+      <div class="week-grid">${days}</div>`;
+  }).join('');
+
+  document.getElementById('plannerApp').innerHTML = `
+    <div class="planner-stat-grid">
+      <div class="planner-stat">
+        <div class="planner-stat-value">${total}</div>
+        <div class="planner-stat-label">Total Days</div>
+      </div>
+      <div class="planner-stat">
+        <div class="planner-stat-value">${hours}</div>
+        <div class="planner-stat-label">Study Hours</div>
+      </div>
+      <div class="planner-stat">
+        <div class="planner-stat-value">${chaps}</div>
+        <div class="planner-stat-label">Chapters</div>
+      </div>
+      <div class="planner-stat">
+        <div class="planner-stat-value">${mocks}</div>
+        <div class="planner-stat-label">Mock Tests</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.75rem;align-items:center;">
+      <button class="btn-primary" onclick="downloadPlannerCSV()">⬇ Download as CSV</button>
+      <button class="btn-secondary" onclick="plannerState.step=1;renderPlannerForm()">↺ Edit Plan</button>
+      <div style="margin-left:auto;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+        <span class="tag tag-amber">⚛️ Physics</span>
+        <span class="tag tag-purple">🧬 Chemistry</span>
+        <span class="tag tag-blue">∑ Maths</span>
+        <span class="tag" style="background:color-mix(in srgb,var(--accent2) 10%,transparent);color:var(--accent2);border-color:color-mix(in srgb,var(--accent2) 25%,transparent)">📖 Revision</span>
+        <span class="tag" style="background:color-mix(in srgb,var(--danger) 10%,transparent);color:var(--danger);border-color:color-mix(in srgb,var(--danger) 25%,transparent)">🧪 Mock</span>
+      </div>
+    </div>
+
+    ${weeksHtml}`;
+}
+
+function downloadPlannerCSV() {
+  const rows = [['Day','Date','Subject','Chapter','Hours','Type']];
+  plannerState.schedule.forEach(day => {
+    day.sessions.forEach(s => {
+      rows.push([day.dayNum, day.date, s.subject, '"' + s.chapter.replace(/"/g,'""') + '"', s.hours, s.type]);
+    });
+  });
+  const csv  = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type:'text/csv' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = 'JEE_Study_Plan.csv';
+  a.click();
+}
+  
+// ================================================================
 // TAB ROUTING
 // ================================================================
 const TAB_RENDERERS = {
@@ -2748,6 +3369,7 @@ const TAB_RENDERERS = {
   colleges:  renderColleges,
   resources: renderResources,
   dpp:       renderDpp,
+  planner:   renderPlanner,
   examclock: function(){}
 };
 const renderedTabs = {};
@@ -2814,6 +3436,7 @@ document.addEventListener('keydown', e => {
 (function init() {
   buildStepDots();
   renderQuestion();
+  loadPlannerState();
   
   // Register all scroll/touch listeners as passive
   // This is the single most impactful fix for mobile scroll smoothness
