@@ -1064,7 +1064,36 @@ header,
   contain-intrinsic-size: 0 600px;
 }
 
-/* 8. Passive touch — handled via JS below */
+/* ============================================================
+SCROLL REVEAL ANIMATION
+============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal.hidden-up {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+/* Stagger delay for grid children */
+.reveal-group .reveal:nth-child(1) { transition-delay: 0.00s; }
+.reveal-group .reveal:nth-child(2) { transition-delay: 0.07s; }
+.reveal-group .reveal:nth-child(3) { transition-delay: 0.14s; }
+.reveal-group .reveal:nth-child(4) { transition-delay: 0.21s; }
+.reveal-group .reveal:nth-child(5) { transition-delay: 0.28s; }
+.reveal-group .reveal:nth-child(6) { transition-delay: 0.35s; }
+.reveal-group .reveal:nth-child(7) { transition-delay: 0.42s; }
+.reveal-group .reveal:nth-child(8) { transition-delay: 0.49s; }
+.reveal-group .reveal:nth-child(9) { transition-delay: 0.56s; }
+.reveal-group .reveal:nth-child(10){ transition-delay: 0.63s; }
 </style>  
 </head>
 <body>
@@ -1380,6 +1409,79 @@ header,
      ============================================================ -->
 <script defer>
 
+// ================================================================
+// SCROLL REVEAL — IntersectionObserver (bidirectional)
+// ================================================================
+(function initScrollReveal() {
+  const SELECTORS = [
+    '.card', '.branch-card', '.chapter-group',
+    '.tl-item', '.result-card', '.question-card',
+    '.page-header', '.info-banner', '.table-wrap',
+    '.syllabus-tabs', '.branches-filter', '.syl-header'
+  ];
+
+  // Mark grid containers as reveal-group so stagger delays apply
+  const GROUP_SELECTORS = ['.cards-grid', '.chapters-grid'];
+
+  function tagGroups() {
+    GROUP_SELECTORS.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => el.classList.add('reveal-group'));
+    });
+  }
+
+  function tagRevealTargets() {
+    SELECTORS.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (!el.closest('header') && !el.closest('.nav-wrap')) {
+          el.classList.add('reveal');
+        }
+      });
+    });
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const el = entry.target;
+      if (entry.isIntersecting) {
+        el.classList.add('visible');
+        el.classList.remove('hidden-up');
+      } else {
+        // Determine scroll direction via boundingRect
+        if (entry.boundingClientRect.top > 0) {
+          // element is below viewport — scrolled back up
+          el.classList.remove('visible');
+          el.classList.remove('hidden-up');
+        } else {
+          // element is above viewport — scrolled past it going down
+          el.classList.remove('visible');
+          el.classList.add('hidden-up');
+        }
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -48px 0px'
+  });
+
+  function observeAll() {
+    tagGroups();
+    tagRevealTargets();
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  }
+
+  // Run on first load
+  observeAll();
+
+  // Re-run after any tab renders new DOM
+  const originalShowTab = window.showTab || showTab;
+  const _showTab = showTab;
+  window.showTab = function(name) {
+    _showTab(name);
+    // Wait one frame for DOM to paint, then re-observe
+    requestAnimationFrame(() => requestAnimationFrame(observeAll));
+  };
+})();
+  
 // ================================================================
 // QUOTE TICKER
 // ================================================================
